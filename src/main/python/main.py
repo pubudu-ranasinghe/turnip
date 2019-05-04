@@ -11,7 +11,7 @@ class AppContext(ApplicationContext):
     """
 
     def run(self):
-        url = QUrl.fromLocalFile(self.get_resource("view.qml"))
+        url = QUrl.fromLocalFile(self.get_resource("main.qml"))
         engine = QQmlApplicationEngine()
         engine.load(url)
 
