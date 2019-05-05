@@ -73,7 +73,10 @@ Window {
         Switch {
             id: isCopyControl
             text: (isCopyControl.checked ? "Copy" : "Move") + qsTr(" Files")
-            checked: true
+            checked: config.isCopy
+            onToggled: {
+                config.setIsCopy(isCopyControl.checked)
+            }
         }
     }
 

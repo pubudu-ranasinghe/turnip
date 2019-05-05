@@ -33,7 +33,14 @@ class BeetsFacade(object):
     # TODO This strips the comments in the YAML file.
     # Would be better if we can preserve the comments
     def set_config_value(self, key, value):
-        config[key] = value
+        # TODO
+        # This is a temporary hack to set nested config values
+        parts = key.split(".")
+        if len(parts) > 1:
+            config[parts[0]][parts[1]] = value
+        else:
+            config[parts[0]] = value
+
         updated_config = config.dump(False)
         with open(self.get_config_path(), "w") as writer:
             writer.write(updated_config)
