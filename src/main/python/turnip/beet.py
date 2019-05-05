@@ -41,7 +41,5 @@ class BeetsFacade(object):
         else:
             config[parts[0]] = value
 
-        updated_config = config.dump(False)
-        with open(self.get_config_path(), "w") as writer:
-            writer.write(updated_config)
-            return True
+    def dump_config(self):
+        return config.dump(False)

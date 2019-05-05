@@ -9,6 +9,17 @@ class ConfigHandler(QObject):
         self.__library_path = self.__beets.get_config_value("directory")
         self.__is_copy = True
 
+    def save_config(self):
+        updated_config = self.__beets.dump_config()
+        with open(self.__beets.get_config_path(), "w") as writer:
+            writer.write(updated_config)
+            return True
+
+    # TODO Error handling
+    @pyqtSlot()
+    def save(self):
+        self.save_config()
+
     # Configuration Path
     configPathChanged = pyqtSignal(str)
 

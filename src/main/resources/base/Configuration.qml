@@ -4,6 +4,7 @@ import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.3
 
 Window {
+    id: configWindow
     width: 420
     height: 480
     visible: true
@@ -65,7 +66,7 @@ Window {
         Label {
             id: isCopyControlHelp
             width: parent.width
-            text: qsTr("If enabled the the original files will be autotagged and copied to the library. Otherwise original file will be moved to library")
+            text: qsTr("If enabled the the original files will be autotagged and copied to the library. Otherwise original file will be moved to library.")
             wrapMode: Text.WordWrap
             color: "#bbb"
         }
@@ -76,6 +77,28 @@ Window {
             checked: config.isCopy
             onToggled: {
                 config.setIsCopy(isCopyControl.checked)
+            }
+        }
+
+        Row {
+            anchors.right: parent.right
+            spacing: 10
+
+            Button {
+                id: cancelButton
+                text: "Cancel"
+                onClicked: {
+                    configWindow.close()
+                }
+            }
+
+            Button {
+                id: saveButton
+                text: "Save"
+                onClicked: {
+                    config.save()
+                    configWindow.close()
+                }
             }
         }
     }
