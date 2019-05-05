@@ -26,7 +26,7 @@ class AppContext(ApplicationContext):
         return ConfigHandler(self.beets)
 
     def run(self):
-        url = QUrl.fromLocalFile(self.get_resource("Configuration.qml"))
+        url = QUrl.fromLocalFile(self.get_resource("main.qml"))
         engine = QQmlApplicationEngine()
 
         engine.rootContext().setContextProperty("config", self.config)

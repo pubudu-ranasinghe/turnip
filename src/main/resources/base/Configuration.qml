@@ -7,7 +7,6 @@ Window {
     id: configWindow
     width: 420
     height: 480
-    visible: true
     title: qsTr("Edit Configuration")
 
     Column {
