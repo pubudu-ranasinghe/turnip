@@ -29,28 +29,31 @@ Window {
 
                 KeyValue {
                     keyText: qsTr("Total Tracks")
-                    valueText: "0"
+                    valueText: library.stats.trackCount
                 }
 
                 KeyValue {
                     keyText: qsTr("Albums")
-                    valueText: "0"
+                    valueText: library.stats.albums
                 }
                 
                 KeyValue {
-                    keyText: qsTr("Album Artists")
-                    valueText: "0"
+                    keyText: qsTr("Artists")
+                    valueText: library.stats.artists
                 }
             }
+            
             Column {
+                spacing: 5
+
                 KeyValue {
                     keyText: qsTr("Total Time")
-                    valueText: "0.0 seconds"
+                    valueText: library.stats.totalTime
                 }
 
                 KeyValue {
                     keyText: qsTr("Approximate Total Size")
-                    valueText: "0.0 B"
+                    valueText: library.stats.totalSize
                 }
             }
         }
