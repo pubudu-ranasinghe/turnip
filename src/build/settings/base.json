@@ -1,6 +1,6 @@
 {
     "app_name": "Turnip",
     "author": "Pubudu Ranasinghe",
-    "main_module": "src/main/python/main.py",
+    "main_module": "src/main/python/turnip/main.py",
     "version": "0.0.0"
 }

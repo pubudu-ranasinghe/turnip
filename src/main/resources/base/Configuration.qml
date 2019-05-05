@@ -1,6 +1,7 @@
 import QtQuick 2.2
 import QtQuick.Window 2.2
-import QtQuick.Controls 2.3
+import QtQuick.Controls 2.5
+import QtQuick.Dialogs 1.3
 
 Window {
     width: 420
@@ -31,7 +32,7 @@ Window {
         TextField {
             id: configPathInput
             width: parent.width
-            text: qsTr("~/Music/config.yml")
+            text: config.configPath
             enabled: false
         }
 
@@ -52,8 +53,13 @@ Window {
         TextField {
             id: libraryPathInput
             width: parent.width
-            text: qsTr("~/Music/Library")
-            enabled: true
+            text: config.libraryPath
+            enabled: false
+        }
+
+        Button {
+            text: "Change"
+            onClicked: libraryPathDialog.open()
         }
 
         Label {
@@ -68,6 +74,16 @@ Window {
             id: isCopyControl
             text: (isCopyControl.checked ? "Copy" : "Move") + qsTr(" Files")
             checked: true
+        }
+    }
+
+    FileDialog {
+        id: libraryPathDialog
+        title: qsTr("Select Library Folder")
+        selectFolder: true
+        selectMultiple: false
+        onAccepted: {
+            config.setLibraryPath(libraryPathDialog.fileUrl)
         }
     }
 }
