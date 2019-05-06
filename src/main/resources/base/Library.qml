@@ -36,13 +36,13 @@ Window {
                     keyText: qsTr("Albums")
                     valueText: library.stats.albums
                 }
-                
+
                 KeyValue {
                     keyText: qsTr("Artists")
                     valueText: library.stats.artists
                 }
             }
-            
+
             Column {
                 spacing: 5
 
@@ -57,5 +57,23 @@ Window {
                 }
             }
         }
+
+        Rectangle {
+            width: parent.width
+            height: 200
+
+            GridView {
+                width: parent.width
+                height: 250
+                boundsBehavior: Flickable.StopAtBounds
+                cellWidth: 120
+                cellHeight: 120
+                clip: true
+                model: AlbumModel {}
+                delegate: Record {}
+                ScrollBar.vertical: ScrollBar {}
+            }
+        }
+
     }
 }
