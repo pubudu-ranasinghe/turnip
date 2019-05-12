@@ -4,76 +4,72 @@ import QtQuick.Controls 2.3
 
 Window {
     id: libraryWindow
-    width: 640
+    width: 600
     height: 480
     title: qsTr("Library")
     visible: true
 
-    Column {
-        id: row
-        anchors.fill: parent
-        anchors.margins: 20
-        spacing: 20
+    FontLoader {
+        id: interBold
+        source: "../fonts/Inter-Bold.ttf"
+    }
 
-        Text {
-            id: libraryHeading
-            text: qsTr("Music Library")
-            font.pixelSize: 24
-        }
+    FontLoader {
+        id: interRegular
+        source: "../fonts/Inter-Regular.ttf"
+    }
 
-        Row {
-            spacing: 20
+    property string color_primary: "#fcd307"
+    property string color_black: "#1b1919"
+    property string color_gray: "#ececec"
+    property string color_grayish: "#aeabab"
 
-            Column {
-                spacing: 5
+    Text {
+        id: headerText
 
-                KeyValue {
-                    keyText: qsTr("Total Tracks")
-                    valueText: library.stats.trackCount
-                }
-
-                KeyValue {
-                    keyText: qsTr("Albums")
-                    valueText: library.stats.albums
-                }
-
-                KeyValue {
-                    keyText: qsTr("Artists")
-                    valueText: library.stats.artists
-                }
-            }
-
-            Column {
-                spacing: 5
-
-                KeyValue {
-                    keyText: qsTr("Total Time")
-                    valueText: library.stats.totalTime
-                }
-
-                KeyValue {
-                    keyText: qsTr("Approximate Total Size")
-                    valueText: library.stats.totalSize
-                }
-            }
-        }
-
-        Rectangle {
-            width: parent.width
-            height: 200
-
-            GridView {
-                width: parent.width
-                height: 250
-                boundsBehavior: Flickable.StopAtBounds
-                cellWidth: 120
-                cellHeight: 120
-                clip: true
-                model: AlbumModel {}
-                delegate: Record {}
-                ScrollBar.vertical: ScrollBar {}
-            }
+        text: qsTr("Library")
+        x: 20; y: 36
+        font {
+            pixelSize: 28
+            family: "Inter"
+            weight: Font.Bold
+            letterSpacing: -1.4
         }
 
     }
+
+    TabBar {
+        id: tabBar
+        x: 20; y: 92
+
+        CustomTabButton {
+            text: qsTr("Albums")
+        }
+
+        CustomTabButton {
+            text: qsTr("Tracks")
+        }
+
+        CustomTabButton {
+            text: qsTr("Artists")
+        }
+    }
+
+    Rectangle {
+        width: 575; height: 300
+        x: 20; y: 160
+
+        GridView {
+            width: parent.width
+            height: 300
+            boundsBehavior: Flickable.StopAtBounds
+            cellWidth: 115
+            cellHeight: 150
+            clip: true
+            model: AlbumModel {}
+            delegate: Record {}
+            ScrollBar.vertical: ScrollBar {}
+        }
+    }
+
 }
