@@ -4,18 +4,6 @@ import QtQuick.Controls 2.12
 Button {
     id: control
 
-    FontLoader {
-        id: interBold
-        source: "../fonts/Inter-Bold.ttf"
-    }
-
-    FontLoader {
-        id: interRegular
-        source: "../fonts/Inter-Regular.ttf"
-    }
-
-    property string color_primary: "#fcd307"
-    property string color_black: "#1b1919"
     property alias buttonText: label.text
     property alias backgroundColor: background.color
     property alias textcolor: label.color

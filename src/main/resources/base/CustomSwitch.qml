@@ -4,10 +4,6 @@ import QtQuick.Controls 2.12
 Switch {
     id: control
 
-    property string color_primary: "#fcd307"
-    property string color_black: "#1b1919"
-    property string color_gray: "#ececec"
-
     text: qsTr("Switch")
     checked: false
     spacing: 8

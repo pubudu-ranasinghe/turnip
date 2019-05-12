@@ -5,7 +5,6 @@ import QtQuick.Dialogs 1.3
 
 Window {
     id: configWindow
-    visible: true
 
     FontLoader {
         id: interBold
@@ -20,6 +19,8 @@ Window {
     property string color_primary: "#fcd307"
     property string color_black: "#1b1919"
     property string color_gray: "#ececec"
+    property string color_grayish: "#aeabab"
+    property string color_dark_gray: "#4e4747"
 
     width: 360
     height: 480

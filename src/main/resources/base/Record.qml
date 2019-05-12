@@ -3,10 +3,6 @@ import QtQuick 2.12
 Rectangle {
     id: control
 
-    property string color_primary: "#fcd307"
-    property string color_black: "#1b1919"
-    property string color_gray: "#ececec"
-
     width: 100
     height: 150
 

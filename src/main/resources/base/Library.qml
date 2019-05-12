@@ -7,7 +7,6 @@ Window {
     width: 600
     height: 480
     title: qsTr("Library")
-    visible: true
 
     FontLoader {
         id: interBold
@@ -23,6 +22,7 @@ Window {
     property string color_black: "#1b1919"
     property string color_gray: "#ececec"
     property string color_grayish: "#aeabab"
+    property string color_dark_gray: "#4e4747"
 
     Text {
         id: headerText
