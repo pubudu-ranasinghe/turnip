@@ -3,9 +3,9 @@ import sys
 from fbs_runtime.application_context import ApplicationContext, cached_property
 from PyQt5.QtQml import QQmlApplicationEngine
 from PyQt5.QtCore import QUrl
-from turnip.beet import BeetsFacade
-from turnip.config import ConfigHandler
-from turnip.library import LibraryHandler
+from beet import BeetsFacade
+from config import ConfigHandler
+from library import LibraryHandler
 
 
 class AppContext(ApplicationContext):
@@ -31,7 +31,7 @@ class AppContext(ApplicationContext):
         return LibraryHandler(self.beets)
 
     def run(self):
-        url = QUrl.fromLocalFile(self.get_resource("Library.qml"))
+        url = QUrl.fromLocalFile(self.get_resource("main.qml"))
         engine = QQmlApplicationEngine()
 
         engine.rootContext().setContextProperty("config", self.config)
