@@ -6,6 +6,8 @@ from PyQt5.QtCore import QUrl
 from beet import BeetsFacade
 from config import ConfigHandler
 from library import LibraryHandler
+from importhandler import import_files, ImportHandler
+from beets.ui import UserError
 
 
 class AppContext(ApplicationContext):
@@ -30,12 +32,17 @@ class AppContext(ApplicationContext):
     def library(self):
         return LibraryHandler(self.beets)
 
+    @cached_property
+    def importer(self):
+        return ImportHandler(self.beets)
+
     def run(self):
         url = QUrl.fromLocalFile(self.get_resource("main.qml"))
         engine = QQmlApplicationEngine()
 
         engine.rootContext().setContextProperty("config", self.config)
         engine.rootContext().setContextProperty("library", self.library)
+        engine.rootContext().setContextProperty("importer", self.importer)
         engine.load(url)
 
         if not engine.rootObjects():
@@ -46,5 +53,15 @@ class AppContext(ApplicationContext):
 
 if __name__ == '__main__':
     APP_CTXT = AppContext()
+
+    # path = QUrl().fromLocalFile("D:/Movies/MUSIC/Akon/Akon - In My Ghetto")
+    # try:
+    #     print(path.toLocalFile())
+    #     import_files(APP_CTXT.beets.lib, [path.toLocalFile()], None)
+    # except UserError as error:
+    #     print(error)
+    # except Exception as error:
+    #     print(error)
+
     EXIT_CODE = APP_CTXT.run()
-    sys.exit(EXIT_CODE)
+    sys.exit(0)
