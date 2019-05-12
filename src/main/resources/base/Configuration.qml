@@ -5,100 +5,141 @@ import QtQuick.Dialogs 1.3
 
 Window {
     id: configWindow
-    width: 420
+    visible: true
+
+    FontLoader {
+        id: interBold
+        source: "../fonts/Inter-Bold.ttf"
+    }
+
+    FontLoader {
+        id: interRegular
+        source: "../fonts/Inter-Regular.ttf"
+    }
+
+    property string color_primary: "#fcd307"
+    property string color_black: "#1b1919"
+    property string color_gray: "#ececec"
+
+    width: 360
     height: 480
     title: qsTr("Edit Configuration")
 
+    Text {
+        id: headerText
+
+        text: qsTr("Configure")
+        x: 20; y: 36
+        font {
+            pixelSize: 28
+            family: "Inter"
+            weight: Font.Bold
+            letterSpacing: -1.4
+        }
+
+    }
+
     Column {
-        id: element
-        spacing: 10
-        anchors.margins: 20
-        anchors.fill: parent
+        x: 20; y: 102
+        spacing: 8
 
-        Label {
+        Text {
+            id: libraryPathLabel
+
+            text: qsTr("Library Path")
+            font {
+                pixelSize: 18
+                family: "Inter"
+                weight: Font.Normal
+            }
+        }
+
+        Row {
+            spacing: 15
+
+            CustomTextField {
+                id: libraryPathInput
+
+                width: 255
+                text: config.libraryPath
+                enabled: false
+            }
+
+            CustomButton {
+                id: libraryPathInputBtn
+
+                width: 50; height: 50
+                backgroundColor: color_gray
+
+                onClicked: libraryPathDialog.open()
+            }
+        }
+    }
+
+    Column {
+        x: 20; y: 196
+        spacing: 8
+
+        Text {
             id: configPathLabel
-            width: parent.width
-            text: qsTr("Configuration File Location")
+
+            text: qsTr("Config File")
+            font {
+                pixelSize: 18
+                family: "Inter"
+                weight: Font.Normal
+            }
         }
 
-        Label {
-            id: configPathHelpLabel
-            width: parent.width
-            text: qsTr("This is the configuration file used by Beets. Some of the configuration options can be set below. You can edit the full configuration by directly opening it with a text editor.")
-            color: "#bbb"
-            wrapMode: Text.WordWrap
-        }
-
-        TextField {
+        CustomTextField {
             id: configPathInput
-            width: parent.width
+
+            width: 320
             text: config.configPath
             enabled: false
         }
+    }
 
-        Label {
-            id: libraryPathLabel
-            width: parent.width
-            text: qsTr("Library Location")
-        }
+    Item {
+        id: element
+        x: 20; y: 290
+        width: 320; height: 79
 
-        Label {
-            id: libraryPathHelpLabel
-            width: parent.width
-            text: qsTr("Location of the destination library. This is where autotagged and organized files will be saved to.")
-            wrapMode: Text.WordWrap
-            color: "#bbb"
-        }
-
-        TextField {
-            id: libraryPathInput
-            width: parent.width
-            text: config.libraryPath
-            enabled: false
-        }
-
-        Button {
-            text: "Change"
-            onClicked: libraryPathDialog.open()
-        }
-
-        Label {
-            id: isCopyControlHelp
-            width: parent.width
-            text: qsTr("If enabled the the original files will be autotagged and copied to the library. Otherwise original file will be moved to library.")
-            wrapMode: Text.WordWrap
-            color: "#bbb"
-        }
-
-        Switch {
+        CustomSwitch {
             id: isCopyControl
+
             text: (isCopyControl.checked ? "Copy" : "Move") + qsTr(" Files")
+            anchors.verticalCenter: parent.verticalCenter
             checked: config.isCopy
             onToggled: {
                 config.setIsCopy(isCopyControl.checked)
             }
         }
+    }
 
-        Row {
-            anchors.right: parent.right
-            spacing: 10
 
-            Button {
-                id: cancelButton
-                text: "Cancel"
-                onClicked: {
-                    configWindow.close()
-                }
-            }
+    CustomButton {
+        id: saveButton
 
-            Button {
-                id: saveButton
-                text: "Save"
-                onClicked: {
-                    config.save()
-                    configWindow.close()
-                }
-            }
+        x: 20; y: 407
+        width: 120; height: 50
+        text: "Save"
+        backgroundColor: color_gray
+        onClicked: {
+            config.save()
+            configWindow.close()
+        }
+    }
+
+    CustomButton {
+        id: cancelButton
+
+        x: 155; y: 407
+        width: 120; height: 50
+        text: "Cancel"
+        backgroundColor: color_gray
+        onClicked: {
+            configWindow.close()
         }
     }
 
