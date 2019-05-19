@@ -1,7 +1,6 @@
 import QtQuick 2.2
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.5
-import QtQuick.Dialogs 1.3
 
 Window {
     id: mainWindow
@@ -20,6 +19,7 @@ Window {
     property var configWindow: Configuration {}
     property var libraryWindow: Library {}
     property var importerWindow: Importer {}
+    property var importerSelectionWindow: ImporterSelection {}
     
     property string color_primary: "#fcd307"
     property string color_black: "#1b1919"
@@ -106,7 +106,7 @@ Window {
         backgroundColor: color_primary
         textcolor: color_black
 
-        onClicked: importPathDialog.open()
+        onClicked: importerSelectionWindow.visible = true
     }
 
     CustomButton {
@@ -131,16 +131,6 @@ Window {
         textcolor: color_black
 
         onClicked: configWindow.visible = true
-    }
-
-    FileDialog {
-        id: importPathDialog
-        title: qsTr("Select Import Folder")
-        selectFolder: true
-        onAccepted: {
-            importer.test(importPathDialog.fileUrl)
-            importerWindow.visible = true
-        }
     }
 
 }

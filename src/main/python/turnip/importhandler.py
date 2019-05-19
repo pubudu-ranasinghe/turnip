@@ -5,7 +5,7 @@ from turnipimporter import TurnipImportSession
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QUrl, QRunnable
 import traceback
 import sys
-import time
+import logging as logger
 
 
 def import_files(lib, paths, query):
@@ -35,23 +35,33 @@ def import_files(lib, paths, query):
 # ImportHandler class exposed to QML
 class ImportHandler(QObject):
 
-    def __init__(self, beets_facade, threadpool):
+    def __init__(self, beets, threadpool):
         QObject.__init__(self)
-        self._beets = beets_facade
         self._threadpool = threadpool
-        print(f"Maximum of {self._threadpool.maxThreadCount()} threads.")
+        self._lib = beets.lib
+        logger.debug(f"Max {self._threadpool.maxThreadCount()} threads.")
 
     @pyqtSlot(QUrl)
     def startSession(self, path):
-        session = self._beets.create_import_session(path.toLocalFile())
-        session.run()
-
-    @pyqtSlot(QUrl)
-    def test(self, path):
-        worker = Worker(self.some_work)
+        pathstr = path.toLocalFile()
+        worker = Worker(self.start_session, pathstr)
         worker.signals.result.connect(self.print_output)
         worker.signals.finished.connect(self.thread_complete)
         self._threadpool.start(worker)
+
+    def start_session(self, path: str):
+        logger.info(f"Starting logging session with path: {path}")
+        if config['import']['log'].get() is not None:
+            logpath = config['import']['log'].as_filename()
+        try:
+            loghandler = logging.FileHandler(logpath)
+        except IOError:
+            raise UserError(f"could not open log file for writing: {logpath}")
+        else:
+            loghandler = None
+
+        session = TurnipImportSession(self._lib, loghandler, [path], None)
+        session.run()
 
     def print_output(self, s):
         print(s)
@@ -59,26 +69,20 @@ class ImportHandler(QObject):
     def thread_complete(self):
         print("THREAD COMPLETE!")
 
-    def some_work(self):
-        for n in range(0, 5):
-            time.sleep(1)
-            print(f"Working {n}")
-        return "Done"
-
 
 class Worker(QRunnable):
-    def __init__(self, fn, *args):
+    def __init__(self, fn, *args, **kwargs):
         super(Worker, self).__init__()
-
         self.fn = fn
         self.args = args
+        self.kwargs = kwargs
         self.signals = WorkerSignals()
 
     @pyqtSlot()
     def run(self):
         try:
             print("starting work")
-            result = self.fn(*self.args)
+            result = self.fn(*self.args, **self.kwargs)
         except Exception:  # TODO Stop catching every exception
             traceback.print_exc()
             exctype, value = sys.exc_info()[:2]

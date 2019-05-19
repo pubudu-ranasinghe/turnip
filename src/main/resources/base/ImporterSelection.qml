@@ -1,10 +1,11 @@
 import QtQuick 2.2
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.5
+import QtQuick.Dialogs 1.3
 
 Window {
     id: importerWindow
-    visible: true
+    // visible: true
 
     FontLoader {
         id: interBold
@@ -88,6 +89,8 @@ Window {
             color: color_gray
             radius: 5
         }
+
+        onClicked: importPathDialog.open()
     }
 
     Button {
@@ -138,6 +141,8 @@ Window {
             color: color_gray
             radius: 5
         }
+
+        onClicked: importPathDialog.open()
     }
 
     Image {
@@ -147,5 +152,14 @@ Window {
         anchors.bottom: parent.bottom
         source: "../images/cat_peek.png"
         fillMode: Image.PreserveAspectFit
+    }
+
+    FileDialog {
+        id: importPathDialog
+        title: qsTr("Select Import Folder")
+        selectFolder: true
+        onAccepted: {
+            importerSelectionWindow.visible = true
+        }
     }
 }
