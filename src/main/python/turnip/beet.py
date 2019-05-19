@@ -1,5 +1,6 @@
-from beets.ui import _setup, human_bytes, human_seconds
-from beets import config
+from beets.ui import _setup, human_bytes, human_seconds, UserError
+from beets import config, logging
+from turnipimporter import TurnipImportSession
 
 
 class BeetsFacade(object):
@@ -60,3 +61,15 @@ class BeetsFacade(object):
 
     def dump_config(self):
         return config.dump(False)
+
+    def create_import_session(self, path):
+        if config['import']['log'].get() is not None:
+            logpath = config['import']['log'].as_filename()
+        try:
+            loghandler = logging.FileHandler(logpath)
+        except IOError:
+            raise UserError(u"could not open log file for writing: "
+                            u"{0}".format(logpath))
+        else:
+            loghandler = None
+        return TurnipImportSession(self.library, loghandler, [path], None)

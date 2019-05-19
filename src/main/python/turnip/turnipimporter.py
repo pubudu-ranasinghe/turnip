@@ -17,5 +17,5 @@ class TurnipImportSession(importer.ImportSession):
         raise NotImplementedError
 
     def should_resume(self, path):
-        print("should resume")
-        raise NotImplementedError
+        print(f"Import of the directory: {path} was interrupted. Resuming")
+        return True  # Always resume for now
