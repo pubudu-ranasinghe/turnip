@@ -18,7 +18,6 @@ Window {
 
     property var configWindow: Configuration {}
     property var libraryWindow: Library {}
-    property var importerWindow: Importer {}
     property var importerSelectionWindow: ImporterSelection {}
     
     property string color_primary: "#fcd307"

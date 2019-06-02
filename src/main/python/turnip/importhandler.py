@@ -2,7 +2,8 @@ import os
 from beets.ui import UserError
 from beets import config, logging
 from turnipimporter import TurnipImportSession
-from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot, QUrl, QRunnable
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, pyqtProperty, QUrl
+from PyQt5.QtCore import QObject, QThreadPool, QRunnable
 import traceback
 import sys
 import logging as logger
@@ -32,19 +33,58 @@ def import_files(lib, paths, query):
     # Emit plugin event
 
 
+class MatchCandidate(object):
+    def __init__(self, album: str, artist: str, year: int, similarity: float):
+        self.album = album
+        self.artist = artist
+        self.year = year
+        self.similarity = similarity
+
+
 # ImportHandler class exposed to QML
 class ImportHandler(QObject):
+    """
+    Responsible for updating the UI and responding to user input
+    and communicating back and forth with `TurnipImportSession`.
+    """
 
-    def __init__(self, beets, threadpool):
+    _current_item = "/Users/Downloads/LT - LP"
+    _candidates = [
+        MatchCandidate("Living Things", "Linkin Park", 2007, 94.2)
+    ]
+    _mcandidate = MatchCandidate("Living Things", "Linkin Park", 2007, 94.2)
+
+    def __init__(self, beets):
         QObject.__init__(self)
-        self._threadpool = threadpool
+        self._threadpool = QThreadPool()
         self._lib = beets.lib
         logger.debug(f"Max {self._threadpool.maxThreadCount()} threads.")
+
+    # Setup qt properties
+    # ===================
+
+    currentItemChanged = pyqtSignal(str)
+
+    def get_current_item(self):
+        return self._current_item
+
+    def set_current_item(self, value: str):
+        self._current_item = value
+        self.currentItemChanged.emit(self._current_item)
+
+    currentItem = pyqtProperty(
+        str,
+        get_current_item,
+        notify=currentItemChanged
+    )
 
     @pyqtSlot(QUrl)
     def startSession(self, path):
         pathstr = path.toLocalFile()
-        worker = Worker(self.start_session, pathstr)
+        worker = Worker(
+            self.start_session,
+            pathstr
+        )
         worker.signals.result.connect(self.print_output)
         worker.signals.finished.connect(self.thread_complete)
         self._threadpool.start(worker)

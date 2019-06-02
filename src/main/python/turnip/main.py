@@ -2,7 +2,7 @@ import sys
 
 from fbs_runtime.application_context import ApplicationContext, cached_property
 from PyQt5.QtQml import QQmlApplicationEngine
-from PyQt5.QtCore import QUrl, QThreadPool
+from PyQt5.QtCore import QUrl
 from beet import BeetsFacade
 from config import ConfigHandler
 from library import LibraryHandler
@@ -33,14 +33,10 @@ class AppContext(ApplicationContext):
 
     @cached_property
     def importer(self):
-        return ImportHandler(self.beets, self.threadpool)
-
-    @cached_property
-    def threadpool(self):
-        return QThreadPool()
+        return ImportHandler(self.beets)
 
     def run(self):
-        url = QUrl.fromLocalFile(self.get_resource("main.qml"))
+        url = QUrl.fromLocalFile(self.get_resource("ImporterSelection.qml"))
         engine = QQmlApplicationEngine()
 
         engine.rootContext().setContextProperty("config", self.config)
