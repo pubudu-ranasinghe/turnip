@@ -2,5 +2,12 @@
   "python.pythonPath": "venv\\Scripts\\python.exe",
   "python.linting.pylintEnabled": false,
   "python.linting.flake8Enabled": true,
-  "python.linting.enabled": true
+  "python.linting.enabled": true,
+  "editor.tabSize": 4,
+  "python.testing.pyTestArgs": [
+    "src\\main\\python\\tests"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.nosetestsEnabled": false,
+  "python.testing.pyTestEnabled": true
 }
