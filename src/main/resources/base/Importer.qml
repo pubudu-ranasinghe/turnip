@@ -4,6 +4,7 @@ import QtQuick.Controls 2.5
 
 Window {
     id: importerWindow
+    // visible: true
 
     FontLoader {
         id: interBold
@@ -28,7 +29,7 @@ Window {
     Text {
         id: headerText
 
-        text: qsTr("Import")
+        text: qsTr("Tagging")
         x: 20; y: 36
         font {
             pixelSize: 28
@@ -36,6 +37,18 @@ Window {
             weight: Font.Bold
             letterSpacing: -1.4
         }
+    }
 
+    Text {
+        id: currentItemText
+
+        text: importer.currentItem
+        x: 20; y: 76
+        font {
+            pixelSize: 16
+            family: "Inter"
+            weight: Font.Normal
+        }
+        color: color_grayish
     }
 }

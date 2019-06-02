@@ -4,8 +4,8 @@ import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.3
 
 Window {
-    id: importerWindow
-    // visible: true
+    id: importerSelectionWindow
+    visible: true
 
     FontLoader {
         id: interBold
@@ -16,6 +16,8 @@ Window {
         id: interRegular
         source: "../fonts/Inter-Regular.ttf"
     }
+
+    property var importerWindow: Importer {}
 
     property string color_primary: "#fcd307"
     property string color_black: "#1b1919"
@@ -159,7 +161,8 @@ Window {
         title: qsTr("Select Import Folder")
         selectFolder: true
         onAccepted: {
-            importerSelectionWindow.visible = true
+            importerWindow.visible = true
+            importer.startSession(importPathDialog.fileUrl)
         }
     }
 }
