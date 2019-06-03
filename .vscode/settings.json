@@ -5,7 +5,8 @@
   "python.linting.enabled": true,
   "editor.tabSize": 4,
   "python.testing.pyTestArgs": [
-    "src\\main\\python\\tests"
+    "-s",
+    "src\\main\\python"
   ],
   "python.testing.unittestEnabled": false,
   "python.testing.nosetestsEnabled": false,
