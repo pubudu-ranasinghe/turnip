@@ -48,3 +48,18 @@ def test_pipeline_parallel():
     ])
     pipeline.run_parallel(3)
     cb.assert_called_once_with(4)
+
+
+def test_pipeline_controlled():
+    cb = MagicMock()
+    pipeline = ControlledPipeline([
+        produce(),
+        work(),
+        work(),
+        work(),
+        work()
+    ])
+    p = pipeline.run_controlled()
+    for i in p:
+        cb()
+    assert cb.call_count == 4
