@@ -29,7 +29,7 @@ Window {
     Text {
         id: headerText
 
-        text: qsTr("Tagging")
+        text: importer.loadingStatus ? qsTr("Loading") : qsTr("Tagging")
         x: 20; y: 36
         font {
             pixelSize: 28
@@ -54,7 +54,8 @@ Window {
     }
 
     Button {
-        text: "Click"
-        onClicked: importer.consume()
+        x: 20; y: 120
+        text: "Next"
+        onClicked: importer.nextValue()
     }
 }
