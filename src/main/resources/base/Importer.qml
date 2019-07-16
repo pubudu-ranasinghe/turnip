@@ -42,7 +42,7 @@ Window {
     Text {
         id: currentItemText
 
-        text: importer.currentItem
+        text: importer.currentItem.path
         x: 20; y: 76
         font {
             pixelSize: 16
@@ -50,5 +50,11 @@ Window {
             weight: Font.Normal
         }
         color: color_grayish
+
+    }
+
+    Button {
+        text: "Click"
+        onClicked: importer.consume()
     }
 }

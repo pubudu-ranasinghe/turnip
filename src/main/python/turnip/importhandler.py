@@ -1,36 +1,13 @@
 import os
 from beets.ui import UserError
 from beets import config, logging
-from turnipimporter import TurnipImportSession
+from turnipimporter import TurnipImportSession, Item
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, pyqtProperty, QUrl
 from PyQt5.QtCore import QObject, QThreadPool, QRunnable
 import traceback
 import sys
 import logging as logger
-
-
-def import_files(lib, paths, query):
-    for path in paths:
-        if not os.path.exists(path):
-            raise UserError('no such file or directory:{0}'.format(path))
-
-    if config['import']['quiet'] and config['import']['timid']:
-        raise UserError(u"can't be both quiet and timid")
-
-    if config['import']['log'].get() is not None:
-        logpath = config['import']['log'].as_filename()
-        try:
-            loghandler = logging.FileHandler(logpath)
-        except IOError:
-            raise UserError(u"could not open log file for writing: "
-                            u"{0}".format(logpath))
-    else:
-        loghandler = None
-
-    session = TurnipImportSession(lib, loghandler, paths, query)
-    session.run()
-
-    # Emit plugin event
+import time
 
 
 class MatchCandidate(object):
@@ -48,7 +25,7 @@ class ImportHandler(QObject):
     and communicating back and forth with `TurnipImportSession`.
     """
 
-    _current_item = "/Users/Downloads/LT - LP"
+    _current_item: Item
     _candidates = [
         MatchCandidate("Living Things", "Linkin Park", 2007, 94.2)
     ]
@@ -59,22 +36,24 @@ class ImportHandler(QObject):
         self._threadpool = QThreadPool()
         self._lib = beets.lib
         logger.debug(f"Max {self._threadpool.maxThreadCount()} threads.")
+        self._current_item = Item("path")
 
     # Setup qt properties
     # ===================
 
-    currentItemChanged = pyqtSignal(str)
+    currentItemChanged = pyqtSignal("QVariantMap")
 
     def get_current_item(self):
-        return self._current_item
+        return self._current_item.to_dict()
 
-    def set_current_item(self, value: str):
-        self._current_item = value
-        self.currentItemChanged.emit(self._current_item)
+    def set_current_item(self, item: Item):
+        self._current_item = item
+        self.currentItemChanged.emit(item.to_dict())
 
     currentItem = pyqtProperty(
-        str,
+        "QVariantMap",
         get_current_item,
+        set_current_item,
         notify=currentItemChanged
     )
 
@@ -89,19 +68,29 @@ class ImportHandler(QObject):
         worker.signals.finished.connect(self.thread_complete)
         self._threadpool.start(worker)
 
-    def start_session(self, path: str):
-        logger.info(f"Starting logging session with path: {path}")
-        if config['import']['log'].get() is not None:
-            logpath = config['import']['log'].as_filename()
-        try:
-            loghandler = logging.FileHandler(logpath)
-        except IOError:
-            raise UserError(f"could not open log file for writing: {logpath}")
-        else:
-            loghandler = None
+    @pyqtSlot()
+    def consume(self):
+        self._session.next_value()
 
-        session = TurnipImportSession(self._lib, loghandler, [path], None)
-        session.run()
+    def start_session(self, path: str):
+        # logger.info(f"Starting logging session with path: {path}")
+        # if config['import']['log'].get() is not None:
+        #     logpath = config['import']['log'].as_filename()
+        # try:
+        #     loghandler = logging.FileHandler(logpath)
+        # except IOError:
+        #     raise UserError(f"could not open log file for writing: {logpath}")
+        # else:
+        #     loghandler = None
+
+        # session = TurnipImportSession(self._lib, loghandler, [path], None)
+        # session.set_callback(self.set_current_item)
+        # session.run()
+        print("This happens in a Qt thread")
+        self.set_current_item(Item("my path"))
+
+        self._session = TurnipImportSession(self.set_current_item)
+        self._session.start()
 
     def print_output(self, s):
         print(s)
