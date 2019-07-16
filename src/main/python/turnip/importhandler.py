@@ -1,4 +1,3 @@
-import os
 from beets.ui import UserError
 from beets import config, logging
 from turnipimporter import TurnipImportSession, Item
@@ -7,15 +6,6 @@ from PyQt5.QtCore import QObject, QThreadPool, QRunnable
 import traceback
 import sys
 import logging as logger
-import time
-
-
-class MatchCandidate(object):
-    def __init__(self, album: str, artist: str, year: int, similarity: float):
-        self.album = album
-        self.artist = artist
-        self.year = year
-        self.similarity = similarity
 
 
 # ImportHandler class exposed to QML
@@ -26,10 +16,7 @@ class ImportHandler(QObject):
     """
 
     _current_item: Item
-    _candidates = [
-        MatchCandidate("Living Things", "Linkin Park", 2007, 94.2)
-    ]
-    _mcandidate = MatchCandidate("Living Things", "Linkin Park", 2007, 94.2)
+    _loading_status = False
 
     def __init__(self, beets):
         QObject.__init__(self)
@@ -57,8 +44,30 @@ class ImportHandler(QObject):
         notify=currentItemChanged
     )
 
+    loadingStatusChanged = pyqtSignal(bool)
+
+    def get_loading_status(self):
+        return self._loading_status
+
+    def set_loading_status(self, status: bool):
+        self._loading_status = status
+        self.loadingStatusChanged.emit(status)
+
+    loadingStatus = pyqtProperty(
+        bool,
+        get_loading_status,
+        set_loading_status,
+        notify=loadingStatusChanged
+    )
+
+    @pyqtSlot()
+    def nextValue(self):
+        self._session.next_value()
+
     @pyqtSlot(QUrl)
     def startSession(self, path):
+        # FIXME This QThreading seems to be redundant since actual beets
+        # processing is moved to a python thread to be able to wait for Events
         pathstr = path.toLocalFile()
         worker = Worker(
             self.start_session,
@@ -68,28 +77,27 @@ class ImportHandler(QObject):
         worker.signals.finished.connect(self.thread_complete)
         self._threadpool.start(worker)
 
-    @pyqtSlot()
-    def consume(self):
-        self._session.next_value()
-
     def start_session(self, path: str):
-        # logger.info(f"Starting logging session with path: {path}")
-        # if config['import']['log'].get() is not None:
-        #     logpath = config['import']['log'].as_filename()
-        # try:
-        #     loghandler = logging.FileHandler(logpath)
-        # except IOError:
-        #     raise UserError(f"could not open log file for writing: {logpath}")
-        # else:
-        #     loghandler = None
+        logger.info(f"Starting logging session with path: {path}")
+        if config['import']['log'].get() is not None:
+            logpath = config['import']['log'].as_filename()
+        try:
+            loghandler = logging.FileHandler(logpath)
+        except IOError:
+            raise UserError(f"could not open log file for writing: {logpath}")
+        else:
+            loghandler = None
 
-        # session = TurnipImportSession(self._lib, loghandler, [path], None)
-        # session.set_callback(self.set_current_item)
-        # session.run()
-        print("This happens in a Qt thread")
         self.set_current_item(Item("my path"))
 
-        self._session = TurnipImportSession(self.set_current_item)
+        self._session = TurnipImportSession(
+            self._lib,
+            loghandler,
+            [path],
+            None
+        )
+        self._session.set_callback(self.set_current_item)
+        self._session.set_loading_callback(self.set_loading_status)
         self._session.start()
 
     def print_output(self, s):
