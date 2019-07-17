@@ -1,4 +1,4 @@
-from beets.ui import UserError
+from beets.ui import UserError  # TODO Change to own error type
 from beets import config, logging
 from turnipimporter import TurnipImportSession, Item
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, pyqtProperty, QUrl
@@ -81,10 +81,11 @@ class ImportHandler(QObject):
         logger.info(f"Starting logging session with path: {path}")
         if config['import']['log'].get() is not None:
             logpath = config['import']['log'].as_filename()
-        try:
-            loghandler = logging.FileHandler(logpath)
-        except IOError:
-            raise UserError(f"could not open log file for writing: {logpath}")
+            try:
+                loghandler = logging.FileHandler(logpath)
+            except IOError:
+                raise UserError(
+                    f"could not open log file for writing: {logpath}")
         else:
             loghandler = None
 
