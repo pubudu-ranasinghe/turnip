@@ -62,6 +62,13 @@ class Item(object):
 
 
 class TurnipImportSession(ImportSession):
+    """
+    This is the import session controlling the beets functionality
+    The actual `run()` is executed in a separate thread so we can
+    pause execution for user input using the `ready` Event.
+    Uses callback functions to communicate with UI manager class
+    TODO At some point we can replace callbacks with a Queue perhaps
+    """
     ready = Event()
     user_action: UserAction
 
@@ -74,10 +81,6 @@ class TurnipImportSession(ImportSession):
     def set_ask_resume_callback(self, callback):
         self._ask_resume = callback
 
-    def next_value(self):
-        print(f"received event")
-        self.ready.set()
-
     def wait_user_action(self):
         self._set_loading_status(False)
         self.ready.wait()
@@ -86,11 +89,6 @@ class TurnipImportSession(ImportSession):
     def set_user_action(self, action: UserAction):
         self.user_action = action
         self.ready.set()
-
-    def start(self):
-        thread = Thread(target=self.run)
-        thread.start()
-        thread.join()
 
     def resolve_duplicate(self, task, found_duplicates):
         """TODO Decide what to do when a new album or item seems similar to one
@@ -130,13 +128,15 @@ class TurnipImportSession(ImportSession):
 
     def should_resume(self, path):
         # TODO Ask the user if she wants to resume a previous import
-        print('gonna resume')
         self._set_loading_status(False)
         self._ask_resume()
-        print('waiting for user')
         self.wait_user_action()
-        print('doone')
         return False
+
+    def start(self):
+        thread = Thread(target=self.run)
+        thread.start()
+        thread.join()
 
     def run(self):
         self._set_loading_status(True)

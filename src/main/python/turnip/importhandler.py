@@ -9,9 +9,6 @@ from turnipimporter import (TurnipImportSession, Item, ImportActionType,
                             UserAction)
 
 
-# ImportHandler class exposed to QML
-
-
 class ImportHandler(QObject):
     """
     Responsible for updating the UI and responding to user input
@@ -27,9 +24,6 @@ class ImportHandler(QObject):
         self._lib = beets.lib
         logger.debug(f"Max {self._threadpool.maxThreadCount()} threads.")
         self._current_item = Item("path")
-
-    # Setup qt properties
-    # ===================
 
     currentItemChanged = pyqtSignal("QVariantMap")
 
@@ -101,8 +95,6 @@ class ImportHandler(QObject):
                     f"could not open log file for writing: {logpath}")
         else:
             loghandler = None
-
-        self.set_current_item(Item("my path"))
 
         self._session = TurnipImportSession(
             self._lib,
