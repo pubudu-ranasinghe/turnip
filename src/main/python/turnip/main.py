@@ -63,15 +63,5 @@ class AppContext(ApplicationContext):
 
 if __name__ == '__main__':
     APP_CTXT = AppContext()
-
-    # path = QUrl().fromLocalFile("D:/Movies/MUSIC/Akon/Akon - In My Ghetto")
-    # try:
-    #     print(path.toLocalFile())
-    #     import_files(APP_CTXT.beets.lib, [path.toLocalFile()], None)
-    # except UserError as error:
-    #     print(error)
-    # except Exception as error:
-    #     print(error)
-
     EXIT_CODE = APP_CTXT.run()
-    sys.exit(0)
+    sys.exit(EXIT_CODE)
