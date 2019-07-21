@@ -1,12 +1,26 @@
 import sys
 
 from fbs_runtime.application_context import ApplicationContext, cached_property
-from PyQt5.QtQml import QQmlApplicationEngine
-from PyQt5.QtCore import QUrl
+from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
+from PyQt5.QtCore import QUrl, QObject, Q_ENUM
 from beet import BeetsFacade
 from config import ConfigHandler
 from library import LibraryHandler
 from importhandler import ImportHandler
+from enum import Enum
+
+
+class ImportAction(QObject):
+    """
+    ImportAction Enum exposed to QML.
+    Keep in sync with importhandler/ImportAction
+    TODO Can we merge these?
+    """
+    class Value(Enum):
+        RESUME_YES = 1
+        RESUME_NO = 2
+
+    Q_ENUM(Value)
 
 
 class AppContext(ApplicationContext):
@@ -38,6 +52,8 @@ class AppContext(ApplicationContext):
     def run(self):
         url = QUrl.fromLocalFile(self.get_resource("ImporterSelection.qml"))
         engine = QQmlApplicationEngine()
+
+        qmlRegisterType(ImportAction, "ImportAction", 1, 0, "ImportAction")
 
         engine.rootContext().setContextProperty("config", self.config)
         engine.rootContext().setContextProperty("library", self.library)

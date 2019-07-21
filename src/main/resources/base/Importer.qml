@@ -1,6 +1,9 @@
 import QtQuick 2.2
 import QtQuick.Window 2.2
 import QtQuick.Controls 2.5
+import QtQuick.Dialogs 1.2
+
+import ImportAction 1.0
 
 Window {
     id: importerWindow
@@ -56,6 +59,47 @@ Window {
     Button {
         x: 20; y: 120
         text: "Next"
-        onClicked: importer.nextValue()
+        onClicked: importer.sendAction(ImportAction.RESUME_NO)
+    }
+
+    Dialog {
+        id: resumeDialog
+        visible: false
+        title: qsTr("Resume Previous Import")
+        standardButtons: StandardButton.Yes | StandardButton.No
+
+        onYes: importer.sendAction(ImportAction.RESUME_YES)
+        onNo: importer.sendAction(ImportAction.RESUME_NO)
+
+        Text {
+            id: resumeDialogText
+            text: qsTr("We found a previous import session. Do you want to continue from where you left off?")
+        }
+    }
+
+    // TODO Refactor this signal
+    signal reEndSession()
+    signal reResumePreviousImport()
+
+    Component.onCompleted: {
+        importer.endSession.connect(reEndSession)
+        importer.resumePreviousImport.connect(reResumePreviousImport)
+    }
+
+    Connections {
+        target: importerWindow
+        onReEndSession: importerWindow.close()
+        onReResumePreviousImport: resumeDialog.open()
+    }
+
+    BusyIndicator {
+        id: busyIndicator
+        x: 290
+        y: 210
+        running: importer.loadingStatus
     }
 }
+
+
+
+

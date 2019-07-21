@@ -3,12 +3,19 @@ from beets import config, logging
 from turnipimporter import TurnipImportSession, Item
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, pyqtProperty, QUrl
 from PyQt5.QtCore import QObject, QThreadPool, QRunnable
+from enum import Enum
 import traceback
 import sys
 import logging as logger
 
 
+class ImportAction(Enum):
+    RESUME_YES = 1
+    RESUME_NO = 2
+
 # ImportHandler class exposed to QML
+
+
 class ImportHandler(QObject):
     """
     Responsible for updating the UI and responding to user input
@@ -60,9 +67,25 @@ class ImportHandler(QObject):
         notify=loadingStatusChanged
     )
 
-    @pyqtSlot()
-    def nextValue(self):
-        self._session.next_value()
+    endSession = pyqtSignal()
+
+    resumePreviousImport = pyqtSignal()
+
+    def ask_resume(self):
+        self.resumePreviousImport.emit()
+
+    @pyqtSlot(int)
+    def sendAction(self, action):
+        actionType = ImportAction(action)
+        self.handle_action(actionType)
+
+    def handle_action(self, action: ImportAction):
+        if action is ImportAction.RESUME_YES:
+            print("Resume import")
+        elif action is ImportAction.RESUME_NO:
+            print("Skip resume import")
+        else:
+            print("Unknown action")
 
     @pyqtSlot(QUrl)
     def startSession(self, path):
@@ -73,7 +96,6 @@ class ImportHandler(QObject):
             self.start_session,
             pathstr
         )
-        worker.signals.result.connect(self.print_output)
         worker.signals.finished.connect(self.thread_complete)
         self._threadpool.start(worker)
 
@@ -99,13 +121,12 @@ class ImportHandler(QObject):
         )
         self._session.set_callback(self.set_current_item)
         self._session.set_loading_callback(self.set_loading_status)
+        self._session.set_ask_resume_callback(self.ask_resume)
         self._session.start()
-
-    def print_output(self, s):
-        print(s)
 
     def thread_complete(self):
         print("THREAD COMPLETE!")
+        self.endSession.emit()
 
 
 class Worker(QRunnable):

@@ -1,4 +1,3 @@
-import time
 import logging
 from threading import Event, Thread
 from beets.importer import ImportSession
@@ -26,17 +25,21 @@ class TurnipImportSession(ImportSession):
     def set_loading_callback(self, callback):
         self._set_loading_status = callback
 
+    def set_ask_resume_callback(self, callback):
+        self._ask_resume = callback
+
     def next_value(self):
         print(f"received event")
         self.ready.set()
 
     def wait_user_input(self):
         self.ready.wait()
-        return time.time()
+        return
 
     def start(self):
         thread = Thread(target=self.run)
         thread.start()
+        thread.join()
 
     def resolve_duplicate(self, task, found_duplicates):
         """TODO Decide what to do when a new album or item seems similar to one
@@ -44,7 +47,7 @@ class TurnipImportSession(ImportSession):
         """
         raise NotImplementedError
 
-    def choose_match(self, tasl):
+    def choose_match(self, task):
         """TODO Given an initial autotagging of items, go through an interactive
         dance with the user to ask for a choice of metadata. Returns an
         AlbumMatch object, ASIS, or SKIP.
@@ -59,9 +62,16 @@ class TurnipImportSession(ImportSession):
 
     def should_resume(self, path):
         # TODO Ask the user if she wants to resume a previous import
-        raise NotImplementedError
+        print('gonna resume')
+        self._set_loading_status(False)
+        self._ask_resume()
+        print('waiting for user')
+        self.wait_user_input()
+        print('doone')
+        return False
 
     def run(self):
         self._set_loading_status(True)
         super().run()
+        self._set_loading_status(False)
         # TODO Emit a session end signal and move onto next screen
