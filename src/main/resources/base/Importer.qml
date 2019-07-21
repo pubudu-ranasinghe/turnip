@@ -56,8 +56,60 @@ Window {
 
     }
 
+    Text {
+        id: candidate1
+
+        text: importer.currentItem.candidates[0].title
+        x: 20; y: 146
+        font {
+            pixelSize: 16
+            family: "Inter"
+            weight: Font.Normal
+        }
+        color: color_grayish
+    }
+
+    Text {
+        id: candidate2
+
+        text: importer.currentItem.candidates[1].title
+        x: 20; y: 166
+        font {
+            pixelSize: 16
+            family: "Inter"
+            weight: Font.Normal
+        }
+        color: color_grayish
+    }
+
+    Text {
+        id: candidate3
+
+        text: importer.currentItem.candidates[2].title
+        x: 20; y: 186
+        font {
+            pixelSize: 16
+            family: "Inter"
+            weight: Font.Normal
+        }
+        color: color_grayish
+    }
+
+    Text {
+        id: candidate4
+
+        text: importer.currentItem.candidates[3].title
+        x: 20; y: 206
+        font {
+            pixelSize: 16
+            family: "Inter"
+            weight: Font.Normal
+        }
+        color: color_grayish
+    }
+
     Button {
-        x: 20; y: 120
+        x: 20; y: 320
         text: "Skip"
         onClicked: importer.sendAction(ImportAction.SKIP)
     }

@@ -1,7 +1,9 @@
 import logging
 from threading import Event, Thread
 from beets.importer import ImportSession, ImportTask, action as beets_action
+from beets.autotag import AlbumMatch
 from enum import Enum
+from typing import List
 
 logger = logging.getLogger("turnip")
 logger.setLevel(logging.DEBUG)
@@ -25,13 +27,37 @@ class UserAction(object):
         self.a_type = type_
 
 
+class Candidate(object):
+    distance: float
+    title: str
+    artist: str
+    year: int
+
+    def __init__(self, distance=None, title=None, artist=None, year=None):
+        self.distance = distance
+        self.title = title
+        self.artist = artist
+        self.year = year
+
+    def to_dict(self):
+        return {
+            "distance": self.distance,
+            "title": self.title,
+            "artist": self.artist,
+            "year": self.year
+        }
+
+
 class Item(object):
+    candidates: List[Candidate] = []
+
     def __init__(self, path: str):
         self.path = path
 
     def to_dict(self):
         return {
-            "path": self.path
+            "path": self.path,
+            "candidates": list(map(lambda c: c.to_dict(), self.candidates))
         }
 
 
@@ -80,6 +106,15 @@ class TurnipImportSession(ImportSession):
         self.ready.clear()
         # TODO Use try catch for decoding and use system encoding type
         item = Item(task.toppath.decode("UTF-8"))
+        for c in task.candidates:
+            if isinstance(c, AlbumMatch):
+                candidate = Candidate(
+                    title=c.info.album,
+                    artist=c.info.artist,
+                    year=c.info.year,
+                    distance=c.distance.distance
+                )
+                item.candidates.append(candidate)
         self._callback(item)
         uaction = self.wait_user_action()
         if uaction.a_type is ImportActionType.SKIP:
