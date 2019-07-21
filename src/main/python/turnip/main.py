@@ -7,20 +7,14 @@ from beet import BeetsFacade
 from config import ConfigHandler
 from library import LibraryHandler
 from importhandler import ImportHandler
-from enum import Enum
+from turnipimporter import ImportActionType
 
 
-class ImportAction(QObject):
+class QImportActionType(QObject):
     """
-    ImportAction Enum exposed to QML.
-    Keep in sync with importhandler/ImportAction
-    TODO Can we merge these?
+    Wrapped ImportAction Enum exposed to QML
     """
-    class Value(Enum):
-        RESUME_YES = 1
-        RESUME_NO = 2
-
-    Q_ENUM(Value)
+    Q_ENUM(ImportActionType)
 
 
 class AppContext(ApplicationContext):
@@ -53,7 +47,8 @@ class AppContext(ApplicationContext):
         url = QUrl.fromLocalFile(self.get_resource("ImporterSelection.qml"))
         engine = QQmlApplicationEngine()
 
-        qmlRegisterType(ImportAction, "ImportAction", 1, 0, "ImportAction")
+        qmlRegisterType(QImportActionType, "ImportAction",
+                        1, 0, "ImportAction")
 
         engine.rootContext().setContextProperty("config", self.config)
         engine.rootContext().setContextProperty("library", self.library)

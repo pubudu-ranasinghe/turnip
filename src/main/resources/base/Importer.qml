@@ -58,8 +58,8 @@ Window {
 
     Button {
         x: 20; y: 120
-        text: "Next"
-        onClicked: importer.sendAction(ImportAction.RESUME_NO)
+        text: "Skip"
+        onClicked: importer.sendAction(ImportAction.SKIP)
     }
 
     Dialog {

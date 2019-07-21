@@ -1,9 +1,28 @@
 import logging
 from threading import Event, Thread
-from beets.importer import ImportSession
+from beets.importer import ImportSession, ImportTask, action as beets_action
+from enum import Enum
 
 logger = logging.getLogger("turnip")
 logger.setLevel(logging.DEBUG)
+
+
+class ImportActionType(Enum):
+    RESUME_YES = 1
+    RESUME_NO = 2
+    SKIP = 3
+
+
+class UserAction(object):
+    """
+    Action object passed from UI
+    Contains the ImportActionType selected by user
+    And may contain additional payload for the selected action
+    """
+    payload = None
+
+    def __init__(self, type_):
+        self.a_type = type_
 
 
 class Item(object):
@@ -18,6 +37,7 @@ class Item(object):
 
 class TurnipImportSession(ImportSession):
     ready = Event()
+    user_action: UserAction
 
     def set_callback(self, callback):
         self._callback = callback
@@ -32,9 +52,14 @@ class TurnipImportSession(ImportSession):
         print(f"received event")
         self.ready.set()
 
-    def wait_user_input(self):
+    def wait_user_action(self):
+        self._set_loading_status(False)
         self.ready.wait()
-        return
+        return self.user_action
+
+    def set_user_action(self, action: UserAction):
+        self.user_action = action
+        self.ready.set()
 
     def start(self):
         thread = Thread(target=self.run)
@@ -47,12 +72,20 @@ class TurnipImportSession(ImportSession):
         """
         raise NotImplementedError
 
-    def choose_match(self, task):
+    def choose_match(self, task: ImportTask):
         """TODO Given an initial autotagging of items, go through an interactive
         dance with the user to ask for a choice of metadata. Returns an
         AlbumMatch object, ASIS, or SKIP.
         """
-        raise NotImplementedError
+        self.ready.clear()
+        # TODO Use try catch for decoding and use system encoding type
+        item = Item(task.toppath.decode("UTF-8"))
+        self._callback(item)
+        uaction = self.wait_user_action()
+        if uaction.a_type is ImportActionType.SKIP:
+            return beets_action.SKIP
+        else:
+            raise NotImplementedError
 
     def choose_item(self, task):
         """TODO Ask the user for a choice about tagging a single item. Returns
@@ -66,7 +99,7 @@ class TurnipImportSession(ImportSession):
         self._set_loading_status(False)
         self._ask_resume()
         print('waiting for user')
-        self.wait_user_input()
+        self.wait_user_action()
         print('doone')
         return False
 

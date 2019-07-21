@@ -1,17 +1,13 @@
+import logging as logger
+import sys
+import traceback
+from PyQt5.QtCore import QObject, QThreadPool, QRunnable
+from PyQt5.QtCore import pyqtSignal, pyqtSlot, pyqtProperty, QUrl
 from beets.ui import UserError  # TODO Change to own error type
 from beets import config, logging
-from turnipimporter import TurnipImportSession, Item
-from PyQt5.QtCore import pyqtSignal, pyqtSlot, pyqtProperty, QUrl
-from PyQt5.QtCore import QObject, QThreadPool, QRunnable
-from enum import Enum
-import traceback
-import sys
-import logging as logger
+from turnipimporter import (TurnipImportSession, Item, ImportActionType,
+                            UserAction)
 
-
-class ImportAction(Enum):
-    RESUME_YES = 1
-    RESUME_NO = 2
 
 # ImportHandler class exposed to QML
 
@@ -76,16 +72,11 @@ class ImportHandler(QObject):
 
     @pyqtSlot(int)
     def sendAction(self, action):
-        actionType = ImportAction(action)
-        self.handle_action(actionType)
+        user_action = UserAction(ImportActionType(action))
+        self.handle_action(user_action)
 
-    def handle_action(self, action: ImportAction):
-        if action is ImportAction.RESUME_YES:
-            print("Resume import")
-        elif action is ImportAction.RESUME_NO:
-            print("Skip resume import")
-        else:
-            print("Unknown action")
+    def handle_action(self, action):
+        self._session.set_user_action(action)
 
     @pyqtSlot(QUrl)
     def startSession(self, path):

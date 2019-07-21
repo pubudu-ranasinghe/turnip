@@ -8,7 +8,7 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "${file}",
+            "program": "${cwd}\\src\\main\\python\\turnip\\main.py",
             "console": "integratedTerminal"
         }
     ]
