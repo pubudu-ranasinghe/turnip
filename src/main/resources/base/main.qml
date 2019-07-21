@@ -18,6 +18,7 @@ Window {
 
     property var configWindow: Configuration {}
     property var libraryWindow: Library {}
+    property var importerSelectionWindow: ImporterSelection {}
     
     property string color_primary: "#fcd307"
     property string color_black: "#1b1919"
@@ -103,6 +104,8 @@ Window {
         buttonText: "Import"
         backgroundColor: color_primary
         textcolor: color_black
+
+        onClicked: importerSelectionWindow.visible = true
     }
 
     CustomButton {

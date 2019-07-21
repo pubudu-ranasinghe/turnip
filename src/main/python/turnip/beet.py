@@ -10,6 +10,9 @@ class BeetsFacade(object):
         self.update_stats()
         config.resolve()
 
+    def lib(self):
+        return self.library
+
     def update_stats(self):
         items = self.library.items()
 
