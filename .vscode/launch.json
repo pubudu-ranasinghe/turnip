@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Main Program",
             "type": "python",
             "request": "launch",
             "program": "${cwd}\\src\\main\\python\\turnip\\main.py",
