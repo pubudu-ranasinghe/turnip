@@ -44,7 +44,7 @@ class AppContext(ApplicationContext):
         return ImportHandler(self.beets)
 
     def run(self):
-        url = QUrl.fromLocalFile(self.get_resource("ImporterSelection.qml"))
+        url = QUrl.fromLocalFile(self.get_resource("main.qml"))
         engine = QQmlApplicationEngine()
 
         qmlRegisterType(QImportActionType, "ImportAction",
