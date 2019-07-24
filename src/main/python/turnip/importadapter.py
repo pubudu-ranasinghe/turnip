@@ -1,14 +1,14 @@
 from typing import Callable
 from enum import Enum
+from threading import Event
 
 
 class EventType(Enum):
-    ASK_RESUME = 1
+    TEST_EVENT = 1
 
 
 class ActionType(Enum):
-    RESUME_YES = 1
-    RESUME_NO = 2
+    TEST_ACTION = 1
 
 
 class ImportEvent(object):
@@ -24,15 +24,45 @@ class UserAction(object):
 
 
 class ImportAdapter(object):
-    def __init__(self):
-        pass
+    """
+    Consumes ImportEvents calling supplied callback fns
+    and waits for the next UserAction which is returned
+    TODO Don't wait indefinitely. Abort after timeout
+    """
+    _next_action = None
+    _event_callback = None
 
-    # Sets the callback for events
+    def __init__(self):
+        self._ready = Event()
+
     def on_event(self, handler: Callable[[ImportEvent], bool]):
-        raise NotImplementedError
+        """
+        Set the callback for events
+        """
+        self._event_callback = handler
 
     def handle_action(self, action: UserAction):
-        raise NotImplementedError
+        """
+        Unblocks the thread waiting for UserAction
+        """
+        self._next_action = action
+        self._ready.set()
 
     def consume_event(self, event: ImportEvent) -> UserAction:
-        raise NotImplementedError
+        """
+        Consume an event by sending it to registered event handler
+        and blocks the thread until next UserAction is sent.
+        """
+        result = None
+
+        if self._event_callback is not None:
+            self._event_callback(event)
+
+        self._ready.clear()
+        self._ready.wait()
+
+        if self._next_action is not None:
+            result = self._next_action
+            self._next_action = None
+
+        return result
