@@ -2,11 +2,16 @@ from turnip.importadapter import (
     ImportAdapter, ImportEvent, UserAction, EventType, ActionType)
 from unittest.mock import MagicMock
 from threading import Timer
+from pytest import fixture
 
 
-def test_consume_event_calls_callback():
+@fixture
+def adapter():
+    return ImportAdapter()
+
+
+def test_consume_event_calls_callback(adapter: ImportAdapter):
     cb = MagicMock()
-    adapter = ImportAdapter()
     event = ImportEvent(EventType.TEST_EVENT, None)
     action = UserAction(ActionType.TEST_ACTION, None)
     adapter.on_event(cb)
@@ -16,8 +21,7 @@ def test_consume_event_calls_callback():
     cb.assert_called_once()
 
 
-def test_consume_event_returns_after_delay():
-    adapter = ImportAdapter()
+def test_consume_event_validEvent_returnsAction(adapter: ImportAdapter):
     event = ImportEvent(EventType.TEST_EVENT, None)
     action = UserAction(ActionType.TEST_ACTION, None)
     r = Timer(3, lambda: adapter.handle_action(action))
