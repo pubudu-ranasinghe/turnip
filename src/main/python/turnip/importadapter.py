@@ -5,10 +5,12 @@ from threading import Event
 
 class EventType(Enum):
     TEST_EVENT = 1
+    ASK_ALBUM = 2
 
 
 class ActionType(Enum):
     TEST_ACTION = 1
+    SKIP = 2
 
 
 class ImportEvent(object):

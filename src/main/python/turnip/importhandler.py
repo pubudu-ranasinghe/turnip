@@ -7,6 +7,8 @@ from beets.ui import UserError  # TODO Change to own error type
 from beets import config, logging
 from turnipimporter import (TurnipImportSession, Item, ImportActionType,
                             UserAction)
+from importadapter import ImportAdapter, ImportEvent, UserAction as UAction, ActionType
+from importer import TurnipImporter
 
 
 class ImportHandler(QObject):
@@ -18,12 +20,17 @@ class ImportHandler(QObject):
     _current_item: Item
     _loading_status = False
 
-    def __init__(self, beets):
+    def __init__(self, beets, adapter: ImportAdapter):
         QObject.__init__(self)
         self._threadpool = QThreadPool()
         self._lib = beets.lib
+        self.adapter = adapter
+        self.adapter.on_event(self.handle_event)
         logger.debug(f"Max {self._threadpool.maxThreadCount()} threads.")
         self._current_item = Item("path")
+
+    def handle_event(self, e: ImportEvent):
+        print(e.event_type)
 
     currentItemChanged = pyqtSignal("QVariantMap")
 
@@ -70,7 +77,7 @@ class ImportHandler(QObject):
         self.handle_action(user_action)
 
     def handle_action(self, action):
-        self._session.set_user_action(action)
+        self.adapter.handle_action(UAction(ActionType.SKIP, "hh"))
 
     @pyqtSlot(QUrl)
     def startSession(self, path):
@@ -96,16 +103,24 @@ class ImportHandler(QObject):
         else:
             loghandler = None
 
-        self._session = TurnipImportSession(
+        # self._session = TurnipImportSession(
+        #     self._lib,
+        #     loghandler,
+        #     [path],
+        #     None
+        # )
+        # self._session.set_callback(self.set_current_item)
+        # self._session.set_loading_callback(self.set_loading_status)
+        # self._session.set_ask_resume_callback(self.ask_resume)
+        # self._session.start()
+        session = TurnipImporter(
             self._lib,
             loghandler,
             [path],
-            None
+            None,
+            self.adapter
         )
-        self._session.set_callback(self.set_current_item)
-        self._session.set_loading_callback(self.set_loading_status)
-        self._session.set_ask_resume_callback(self.ask_resume)
-        self._session.start()
+        session.start()
 
     def thread_complete(self):
         print("THREAD COMPLETE!")

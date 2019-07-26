@@ -8,6 +8,7 @@ from config import ConfigHandler
 from library import LibraryHandler
 from importhandler import ImportHandler
 from turnipimporter import ImportActionType
+from importadapter import ImportAdapter
 
 
 class QImportActionType(QObject):
@@ -40,11 +41,15 @@ class AppContext(ApplicationContext):
         return LibraryHandler(self.beets)
 
     @cached_property
+    def adapter(self):
+        return ImportAdapter()
+
+    @cached_property
     def importer(self):
-        return ImportHandler(self.beets)
+        return ImportHandler(self.beets, self.adapter)
 
     def run(self):
-        url = QUrl.fromLocalFile(self.get_resource("main.qml"))
+        url = QUrl.fromLocalFile(self.get_resource("ImporterSelection.qml"))
         engine = QQmlApplicationEngine()
 
         qmlRegisterType(QImportActionType, "ImportAction",

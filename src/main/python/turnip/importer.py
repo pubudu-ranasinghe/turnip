@@ -1,5 +1,5 @@
-from beets.importer import ImportSession, ImportTask
-from turnip.importadapter import ImportAdapter
+from beets.importer import ImportSession, ImportTask, action
+from importadapter import ImportAdapter, ImportEvent, EventType, ActionType
 
 
 class TurnipImporter(ImportSession):
@@ -14,7 +14,15 @@ class TurnipImporter(ImportSession):
         raise NotImplementedError
 
     def choose_match(self, task: ImportTask):
-        raise NotImplementedError
+        event = ImportEvent(EventType.ASK_ALBUM, "Album")
+        result = self._adapter.consume_event(event)
+        if result.action_type is ActionType.SKIP:
+            return action.SKIP
+        else:
+            raise NotImplementedError
 
     def resolve_duplicate(self, task, found_duplicates):
         raise NotImplementedError
+
+    def start(self):
+        self.run()
