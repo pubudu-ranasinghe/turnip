@@ -3,7 +3,7 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.2
 
-import ImportAction 1.0
+import ActionType 1.0
 
 Window {
     id: importerWindow
@@ -70,7 +70,7 @@ Window {
                 text: importer.currentItem.candidates[index] ? importer.currentItem.candidates[index].title : ""
                 alignment: Text.AlignLeft
                 backgroundColor: color_white_two
-                onClicked: importer.sendAction(ImportAction.SELECT_CANDIDATE, index)
+                onClicked: importer.sendAction(ActionType.SELECT_CANDIDATE, index)
             }
         }
     }
@@ -81,7 +81,7 @@ Window {
         width: 120; height: 50
         backgroundColor: color_gray
         text: qsTr("Skip")
-        onClicked: importer.sendAction(ImportAction.SKIP)
+        onClicked: importer.sendAction(ActionType.SKIP)
     }
 
     CustomButton {
@@ -90,7 +90,7 @@ Window {
         width: 120; height: 50
         backgroundColor: color_gray
         text: qsTr("Abort")
-        onClicked: importer.sendAction(ImportAction.ABORT)
+        onClicked: importer.sendAction(ActionType.ABORT)
     }
 
     Dialog {
@@ -99,8 +99,8 @@ Window {
         title: qsTr("Resume Previous Import")
         standardButtons: StandardButton.Yes | StandardButton.No
 
-        onYes: importer.sendAction(ImportAction.RESUME_YES)
-        onNo: importer.sendAction(ImportAction.RESUME_NO)
+        onYes: importer.sendAction(ActionType.RESUME_YES)
+        onNo: importer.sendAction(ActionType.RESUME_NO)
 
         Text {
             id: resumeDialogText

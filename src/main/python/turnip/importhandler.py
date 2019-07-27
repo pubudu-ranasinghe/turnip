@@ -1,14 +1,16 @@
-import logging as logger
 import sys
 import traceback
 from PyQt5.QtCore import QObject, QThreadPool, QRunnable
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, pyqtProperty, QUrl
 from beets.ui import UserError  # TODO Change to own error type
 from beets import config, logging
-from turnipimporter import (TurnipImportSession, Item, ImportActionType,
-                            UserAction)
-from importadapter import ImportAdapter, ImportEvent, UserAction as UAction, ActionType, EventType
-from importer import TurnipImporter
+from importer import TurnipImporter, Item
+from importadapter import (ImportAdapter, ImportEvent,
+                           UserAction, ActionType, EventType)
+
+
+logger = logging.getLogger("turnip")
+logger.setLevel(logging.DEBUG)
 
 
 class ImportHandler(QObject):
@@ -26,11 +28,11 @@ class ImportHandler(QObject):
         self._lib = beets.lib
         self.adapter = adapter
         self.adapter.on_event(self.handle_event)
-        logger.debug(f"Max {self._threadpool.maxThreadCount()} threads.")
+        logger.debug(f"Maximum of {self._threadpool.maxThreadCount()} threads")
         self._current_item = Item("path")
 
     def handle_event(self, e: ImportEvent):
-        print(e.event_type)
+        logger.debug(f"Received event {e.event_type}")
         if e.event_type is EventType.ASK_ALBUM:
             self.set_current_item(e.payload)
         else:
@@ -81,7 +83,7 @@ class ImportHandler(QObject):
         self.handle_action(action, payload)
 
     def handle_action(self, action, payload):
-        user_action = UAction(ActionType(action), payload)
+        user_action = UserAction(ActionType(action), payload)
         user_action.payload = payload
         self.adapter.handle_action(user_action)
 
@@ -98,14 +100,14 @@ class ImportHandler(QObject):
         self._threadpool.start(worker)
 
     def start_session(self, path: str):
-        logger.info(f"Starting logging session with path: {path}")
+        logger.info(f"Starting import session with path: {path}")
         if config['import']['log'].get() is not None:
             logpath = config['import']['log'].as_filename()
             try:
                 loghandler = logging.FileHandler(logpath)
             except IOError:
                 raise UserError(
-                    f"could not open log file for writing: {logpath}")
+                    f"Could not open log file for writing: {logpath}")
         else:
             loghandler = None
 
@@ -119,7 +121,7 @@ class ImportHandler(QObject):
         session.start()
 
     def thread_complete(self):
-        print("THREAD COMPLETE!")
+        logger.info("Thread completed. Ending session")
         self.endSession.emit()
 
 

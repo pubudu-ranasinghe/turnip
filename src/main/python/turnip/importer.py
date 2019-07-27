@@ -1,7 +1,7 @@
 from beets.importer import ImportSession, ImportTask, action, displayable_path
-from beets.autotag import AlbumMatch, TrackMatch
+from beets.autotag import AlbumMatch
 from importadapter import ImportAdapter, ImportEvent, EventType, ActionType
-from turnipimporter import Item, Candidate
+from typing import List
 
 
 class TurnipImporter(ImportSession):
@@ -50,3 +50,38 @@ class TurnipImporter(ImportSession):
             )
         else:
             return None
+
+
+class Candidate(object):
+    distance: float
+    title: str
+    artist: str
+    year: int
+
+    def __init__(self, distance=None, title=None, artist=None, year=None):
+        self.distance = distance
+        self.title = title
+        self.artist = artist
+        self.year = year
+
+    def to_dict(self):
+        return {
+            "distance": self.distance,
+            "title": self.title,
+            "artist": self.artist,
+            "year": self.year
+        }
+
+
+class Item(object):
+    candidates: List[Candidate] = []
+
+    def __init__(self, path: str):
+        self.path = path
+
+    def to_dict(self):
+        return {
+            "path": self.path,
+            "candidates": list(map(lambda c: c.to_dict(), self.candidates))
+        }
+
