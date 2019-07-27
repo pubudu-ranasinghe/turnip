@@ -7,6 +7,7 @@ from beets import config, logging
 from importer import TurnipImporter, Item
 from importadapter import (ImportAdapter, ImportEvent,
                            UserAction, ActionType, EventType)
+from beet import BeetsFacade
 
 
 logger = logging.getLogger("turnip")
@@ -22,10 +23,10 @@ class ImportHandler(QObject):
     _current_item: Item
     _loading_status = False
 
-    def __init__(self, beets, adapter: ImportAdapter):
+    def __init__(self, beets: BeetsFacade, adapter: ImportAdapter):
         QObject.__init__(self)
         self._threadpool = QThreadPool()
-        self._lib = beets.lib
+        self._lib = beets.lib()
         self.adapter = adapter
         self.adapter.on_event(self.handle_event)
         logger.debug(f"Maximum of {self._threadpool.maxThreadCount()} threads")

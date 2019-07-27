@@ -26,6 +26,14 @@ Window {
     property string color_dark_gray: "#4e4747"
     property string color_white_two: "#fafafa"
 
+    function formatCandidateString(candidate) {
+        let result = ""
+        if (candidate) {
+            result = `(${Math.floor(candidate.distance * 100)} %) ${candidate.title} - ${candidate.artist}`;
+        }
+        return result
+    }
+
     width: 640
     height: 580
     title: qsTr("Import Music")
@@ -65,10 +73,10 @@ Window {
         Repeater {
             model: 4
 
-            CustomButton {
+            DetailButton {
                 width: 600; height: 50
-                text: importer.currentItem.candidates[index] ? importer.currentItem.candidates[index].title : ""
-                alignment: Text.AlignLeft
+                primaryText: formatCandidateString(importer.currentItem.candidates[index])
+                image: "../images/placeholder.png"
                 backgroundColor: color_white_two
                 onClicked: importer.sendAction(ActionType.SELECT_CANDIDATE, index)
             }

@@ -28,8 +28,7 @@ class TurnipImporter(ImportSession):
         if result.action_type is ActionType.SKIP:
             return action.SKIP
         elif result.action_type is ActionType.SELECT_CANDIDATE:
-            print("We have a candidate selected", result.payload)
-            raise NotImplementedError
+            return task.candidates[result.payload]
         else:
             print("Unkown Action Type")
             raise NotImplementedError

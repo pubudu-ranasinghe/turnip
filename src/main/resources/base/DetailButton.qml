@@ -16,7 +16,7 @@ Button {
             family: "Inter"
             weight: Font.Normal
         }
-        x: control.height + 20
+        leftPadding: control.height + 15
         verticalAlignment: Text.AlignVCenter
     }
 
