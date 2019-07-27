@@ -7,7 +7,7 @@ from beets.ui import UserError  # TODO Change to own error type
 from beets import config, logging
 from turnipimporter import (TurnipImportSession, Item, ImportActionType,
                             UserAction)
-from importadapter import ImportAdapter, ImportEvent, UserAction as UAction, ActionType
+from importadapter import ImportAdapter, ImportEvent, UserAction as UAction, ActionType, EventType
 from importer import TurnipImporter
 
 
@@ -31,6 +31,10 @@ class ImportHandler(QObject):
 
     def handle_event(self, e: ImportEvent):
         print(e.event_type)
+        if e.event_type is EventType.ASK_ALBUM:
+            self.set_current_item(e.payload)
+        else:
+            pass
 
     currentItemChanged = pyqtSignal("QVariantMap")
 
@@ -72,12 +76,14 @@ class ImportHandler(QObject):
         self.resumePreviousImport.emit()
 
     @pyqtSlot(int)
-    def sendAction(self, action):
-        user_action = UserAction(ImportActionType(action))
-        self.handle_action(user_action)
+    @pyqtSlot(int, int)
+    def sendAction(self, action, payload=None):
+        self.handle_action(action, payload)
 
-    def handle_action(self, action):
-        self.adapter.handle_action(UAction(ActionType.SKIP, "hh"))
+    def handle_action(self, action, payload):
+        user_action = UAction(ActionType(action), payload)
+        user_action.payload = payload
+        self.adapter.handle_action(user_action)
 
     @pyqtSlot(QUrl)
     def startSession(self, path):
@@ -103,16 +109,6 @@ class ImportHandler(QObject):
         else:
             loghandler = None
 
-        # self._session = TurnipImportSession(
-        #     self._lib,
-        #     loghandler,
-        #     [path],
-        #     None
-        # )
-        # self._session.set_callback(self.set_current_item)
-        # self._session.set_loading_callback(self.set_loading_status)
-        # self._session.set_ask_resume_callback(self.ask_resume)
-        # self._session.start()
         session = TurnipImporter(
             self._lib,
             loghandler,

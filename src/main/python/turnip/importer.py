@@ -1,5 +1,7 @@
-from beets.importer import ImportSession, ImportTask, action
+from beets.importer import ImportSession, ImportTask, action, displayable_path
+from beets.autotag import AlbumMatch, TrackMatch
 from importadapter import ImportAdapter, ImportEvent, EventType, ActionType
+from turnipimporter import Item, Candidate
 
 
 class TurnipImporter(ImportSession):
@@ -14,11 +16,22 @@ class TurnipImporter(ImportSession):
         raise NotImplementedError
 
     def choose_match(self, task: ImportTask):
-        event = ImportEvent(EventType.ASK_ALBUM, "Album")
+        item_path = displayable_path(task.paths, " / ")
+        item = Item(item_path)
+        item.candidates = list(
+            map(lambda c: self._build_candidate(c), task.candidates)
+        )
+
+        event = ImportEvent(EventType.ASK_ALBUM, item)
         result = self._adapter.consume_event(event)
+
         if result.action_type is ActionType.SKIP:
             return action.SKIP
+        elif result.action_type is ActionType.SELECT_CANDIDATE:
+            print("We have a candidate selected", result.payload)
+            raise NotImplementedError
         else:
+            print("Unkown Action Type")
             raise NotImplementedError
 
     def resolve_duplicate(self, task, found_duplicates):
@@ -26,3 +39,14 @@ class TurnipImporter(ImportSession):
 
     def start(self):
         self.run()
+
+    def _build_candidate(self, c):
+        if isinstance(c, AlbumMatch):
+            return Candidate(
+                title=c.info.album,
+                artist=c.info.artist,
+                year=c.info.year,
+                distance=c.distance.distance
+            )
+        else:
+            return None

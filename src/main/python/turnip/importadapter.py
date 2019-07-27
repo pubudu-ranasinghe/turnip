@@ -9,8 +9,12 @@ class EventType(Enum):
 
 
 class ActionType(Enum):
-    TEST_ACTION = 1
-    SKIP = 2
+    UNKOWN = 0
+    RESUME_YES = 1
+    RESUME_NO = 2
+    SKIP = 3
+    SELECT_CANDIDATE = 4
+    ABORT = 5
 
 
 class ImportEvent(object):

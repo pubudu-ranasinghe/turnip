@@ -13,6 +13,8 @@ class ImportActionType(Enum):
     RESUME_YES = 1
     RESUME_NO = 2
     SKIP = 3
+    SELECT_CANDIDATE = 4
+    ABORT = 5
 
 
 class UserAction(object):

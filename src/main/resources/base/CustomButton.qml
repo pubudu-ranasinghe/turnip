@@ -7,6 +7,7 @@ Button {
     property alias buttonText: label.text
     property alias backgroundColor: background.color
     property alias textcolor: label.color
+    property alias alignment: label.horizontalAlignment
 
     contentItem: Text {
         id: label
