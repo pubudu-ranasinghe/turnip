@@ -1,8 +1,8 @@
 from beets.autotag import AlbumMatch
-from turnip.importer import Candidate
+from models import Candidate
 
 
-def build_candidate(self, c):
+def build_candidate(c):
     if isinstance(c, AlbumMatch):
         return Candidate(
             title=c.info.album,

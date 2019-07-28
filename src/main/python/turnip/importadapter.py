@@ -1,32 +1,6 @@
 from typing import Callable
-from enum import Enum
 from threading import Event
-
-
-class EventType(Enum):
-    TEST_EVENT = 1
-    ASK_ALBUM = 2
-
-
-class ActionType(Enum):
-    UNKOWN = 0
-    RESUME_YES = 1
-    RESUME_NO = 2
-    SKIP = 3
-    SELECT_CANDIDATE = 4
-    ABORT = 5
-
-
-class ImportEvent(object):
-    def __init__(self, e_type: EventType, payload):
-        self.event_type = e_type
-        self.payload = payload
-
-
-class UserAction(object):
-    def __init__(self, a_type: ActionType, payload):
-        self.action_type = a_type
-        self.payload = payload
+from models import ImportEvent, UserAction
 
 
 class ImportAdapter(object):

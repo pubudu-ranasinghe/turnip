@@ -1,5 +1,4 @@
 import sys
-
 from fbs_runtime.application_context import ApplicationContext, cached_property
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 from PyQt5.QtCore import QUrl, QObject, Q_ENUM
@@ -7,7 +6,8 @@ from beet import BeetsFacade
 from config import ConfigHandler
 from library import LibraryHandler
 from importhandler import ImportHandler
-from importadapter import ImportAdapter, ActionType
+from importadapter import ImportAdapter
+from models import ActionType
 
 
 class QActionType(QObject):

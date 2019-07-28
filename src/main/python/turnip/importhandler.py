@@ -4,10 +4,10 @@ from PyQt5.QtCore import QObject, QThreadPool, QRunnable
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, pyqtProperty, QUrl
 from beets.ui import UserError  # TODO Change to own error type
 from beets import config, logging
-from importer import TurnipImporter, Item
-from importadapter import (ImportAdapter, ImportEvent,
-                           UserAction, ActionType, EventType)
+from importer import TurnipImporter
+from importadapter import ImportAdapter
 from beet import BeetsFacade
+from models import Item, ImportEvent, UserAction, ActionType, EventType
 
 
 logger = logging.getLogger("turnip")
