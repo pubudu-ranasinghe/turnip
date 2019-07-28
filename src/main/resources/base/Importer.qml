@@ -119,16 +119,28 @@ Window {
     // TODO Refactor this signal
     signal reEndSession()
     signal reResumePreviousImport()
+    signal reResolveDuplicate(var oldItem, var newItem)
+    signal duplicateSelectAction(var action)
 
     Component.onCompleted: {
         importer.endSession.connect(reEndSession)
         importer.resumePreviousImport.connect(reResumePreviousImport)
+        importer.resolveDuplicate.connect(reResolveDuplicate)
     }
 
     Connections {
         target: importerWindow
         onReEndSession: importerWindow.close()
         onReResumePreviousImport: resumeDialog.open()
+        onReResolveDuplicate: {
+            var component = Qt.createComponent("ResolveDuplicate.qml");
+            var resolveDialog = component.createObject(importerWindow);
+            resolveDialog.oldItem = oldItem;
+            resolveDialog.newItem = newItem;
+            resolveDialog.onSelectAction.connect(importer.sendAction)
+            resolveDialog.show()
+        }
+
     }
 
     BusyIndicator {

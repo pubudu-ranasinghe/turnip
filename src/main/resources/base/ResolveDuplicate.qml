@@ -3,6 +3,8 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 2.5
 import QtQuick.Dialogs 1.3
 
+import ActionType 1.0
+
 Window {
     id: resolveDuplicateWindow
 
@@ -22,10 +24,16 @@ Window {
     property string color_grayish: "#aeabab"
     property string color_dark_gray: "#4e4747"
 
+    property var oldItem: {}
+    property var newItem: {}
+    
+    signal selectAction(int action)
+
     width: 360
     height: 480
     title: qsTr("Resolve Duplicate")
     flags: Qt.Dialog
+    modality: Qt.ApplicationModal
 
     Text {
         text: qsTr("We found a similar album in your library")
@@ -51,11 +59,14 @@ Window {
     }
 
     CustomCard {
-        id: oldItem
+        id: oldCard
 
         x: 20; y: 107
         height: 90; width: 320
         image: "../images/placeholder.png"
+        primaryText: oldItem.title
+        secondaryText1: oldItem.artist
+        secondaryText2: oldItem.year
     }
 
     Text {
@@ -70,11 +81,14 @@ Window {
     }
 
     CustomCard {
-        id: newItem
+        id: newCard
 
         x: 20; y: 236
         height: 90; width: 320
         image: "../images/placeholder.png"
+        primaryText: newItem.title
+        secondaryText1: newItem.artist
+        secondaryText2: newItem.year
     }
 
     CustomButton {
@@ -84,6 +98,10 @@ Window {
         width: 155; height: 50
         text: qsTr("Replace")
         backgroundColor: color_gray
+        onClicked: {
+            resolveDuplicateWindow.selectAction(ActionType.DUPLICATE_REPLACE_OLD)
+            resolveDuplicateWindow.close()
+        }
     }
 
     CustomButton {
@@ -93,6 +111,10 @@ Window {
         width: 155; height: 50
         text: qsTr("Skip")
         backgroundColor: color_gray
+        onClicked: {
+            resolveDuplicateWindow.selectAction(ActionType.DUPLICATE_SKIP_NEW)
+            resolveDuplicateWindow.close()    
+        }
     }
 
     CustomButton {
@@ -102,6 +124,10 @@ Window {
         width: 155; height: 50
         text: qsTr("Keep Both")
         backgroundColor: color_gray
+        onClicked: {
+            resolveDuplicateWindow.selectAction(ActionType.DUPLICATE_KEEP_BOTH)
+            resolveDuplicateWindow.close()
+        }
     }
 
     CustomButton {
@@ -111,6 +137,10 @@ Window {
         width: 155; height: 50
         text: qsTr("Merge")
         backgroundColor: color_gray
+        onClicked: {
+            resolveDuplicateWindow.selectAction(ActionType.DUPLICATE_MERGE)
+            resolveDuplicateWindow.close()
+        }
     }
 
 }
