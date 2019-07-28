@@ -1,7 +1,7 @@
 from beets.importer import ImportSession, ImportTask, action, displayable_path
-from beets.autotag import AlbumMatch
 from importadapter import ImportAdapter, ImportEvent, EventType, ActionType
 from typing import List
+from util import build_candidate
 
 
 class TurnipImporter(ImportSession):
@@ -18,9 +18,7 @@ class TurnipImporter(ImportSession):
     def choose_match(self, task: ImportTask):
         item_path = displayable_path(task.paths, " / ")
         item = Item(item_path)
-        item.candidates = list(
-            map(lambda c: self._build_candidate(c), task.candidates)
-        )
+        item.candidates = list(map(build_candidate, task.candidates))
 
         event = ImportEvent(EventType.ASK_ALBUM, item)
         result = self._adapter.consume_event(event)
@@ -38,17 +36,6 @@ class TurnipImporter(ImportSession):
 
     def start(self):
         self.run()
-
-    def _build_candidate(self, c):
-        if isinstance(c, AlbumMatch):
-            return Candidate(
-                title=c.info.album,
-                artist=c.info.artist,
-                year=c.info.year,
-                distance=c.distance.distance
-            )
-        else:
-            return None
 
 
 class Candidate(object):
@@ -83,4 +70,3 @@ class Item(object):
             "path": self.path,
             "candidates": list(map(lambda c: c.to_dict(), self.candidates))
         }
-
