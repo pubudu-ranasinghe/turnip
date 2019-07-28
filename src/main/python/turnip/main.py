@@ -7,14 +7,14 @@ from beet import BeetsFacade
 from config import ConfigHandler
 from library import LibraryHandler
 from importhandler import ImportHandler
-from turnipimporter import ImportActionType
+from importadapter import ImportAdapter, ActionType
 
 
-class QImportActionType(QObject):
+class QActionType(QObject):
     """
-    Wrapped ImportAction Enum exposed to QML
+    Wrapped ActionType Enum exposed to QML
     """
-    Q_ENUM(ImportActionType)
+    Q_ENUM(ActionType)
 
 
 class AppContext(ApplicationContext):
@@ -40,15 +40,18 @@ class AppContext(ApplicationContext):
         return LibraryHandler(self.beets)
 
     @cached_property
+    def adapter(self):
+        return ImportAdapter()
+
+    @cached_property
     def importer(self):
-        return ImportHandler(self.beets)
+        return ImportHandler(self.beets, self.adapter)
 
     def run(self):
-        url = QUrl.fromLocalFile(self.get_resource("main.qml"))
+        url = QUrl.fromLocalFile(self.get_resource("ImporterSelection.qml"))
         engine = QQmlApplicationEngine()
 
-        qmlRegisterType(QImportActionType, "ImportAction",
-                        1, 0, "ImportAction")
+        qmlRegisterType(QActionType, "ActionType", 1, 0, "ActionType")
 
         engine.rootContext().setContextProperty("config", self.config)
         engine.rootContext().setContextProperty("library", self.library)
