@@ -39,6 +39,7 @@ class Item(object):
 class EventType(Enum):
     TEST_EVENT = 1
     ASK_ALBUM = 2
+    RESOLVE_DUPLICATE = 3
 
 
 class ActionType(Enum):
@@ -48,6 +49,10 @@ class ActionType(Enum):
     SKIP = 3
     SELECT_CANDIDATE = 4
     ABORT = 5
+    DUPLICATE_REPLACE_OLD = 6
+    DUPLICATE_SKIP_NEW = 7
+    DUPLICATE_KEEP_BOTH = 8
+    DUPLICATE_MERGE = 9
 
 
 class ImportEvent(object):

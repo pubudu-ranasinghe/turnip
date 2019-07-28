@@ -1,6 +1,6 @@
 from beets.importer import ImportSession, ImportTask, action, displayable_path
 from importadapter import ImportAdapter
-from util import build_candidate
+from util import build_candidate, model_to_cadidate
 from models import Item, ImportEvent, EventType, ActionType
 
 
@@ -31,8 +31,23 @@ class TurnipImporter(ImportSession):
             print("Unkown Action Type")
             raise NotImplementedError
 
-    def resolve_duplicate(self, task, found_duplicates):
-        raise NotImplementedError
+    def resolve_duplicate(self, task: ImportTask, found_duplicates):
+        old = model_to_cadidate(found_duplicates[0])
+        new = model_to_cadidate(task.match)
+        event = ImportEvent(EventType.RESOLVE_DUPLICATE, [old, new])
+        result = self._adapter.consume_event(event)
+
+        if result.action_type is ActionType.DUPLICATE_REPLACE_OLD:
+            task.should_remove_duplicates = True
+        elif result.action_type is ActionType.DUPLICATE_SKIP_NEW:
+            task.set_choice(action.SKIP)
+        elif result.action_type is ActionType.DUPLICATE_KEEP_BOTH:
+            pass
+        elif result.action_type is ActionType.DUPLICATE_MERGE:
+            task.should_merge_duplicates = True
+        else:
+            print("Unkown Action Type")
+            raise NotImplementedError
 
     def start(self):
         self.run()

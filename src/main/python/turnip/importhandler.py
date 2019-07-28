@@ -36,6 +36,8 @@ class ImportHandler(QObject):
         logger.debug(f"Received event {e.event_type}")
         if e.event_type is EventType.ASK_ALBUM:
             self.set_current_item(e.payload)
+        elif e.event_type is EventType.RESOLVE_DUPLICATE:
+            self.ask_resolve_duplicate(e.payload[0], e.payload[1])
         else:
             pass
 
@@ -75,8 +77,14 @@ class ImportHandler(QObject):
 
     resumePreviousImport = pyqtSignal()
 
+    resolveDuplicate = pyqtSignal(
+        "QVariantMap", "QVariantMap", arguments=["oldItem", "newItem"])
+
     def ask_resume(self):
         self.resumePreviousImport.emit()
+
+    def ask_resolve_duplicate(self, old, new):
+        self.resolveDuplicate.emit(old.to_dict(), new.to_dict())
 
     @pyqtSlot(int)
     @pyqtSlot(int, int)
