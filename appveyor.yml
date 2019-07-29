@@ -1,7 +1,7 @@
 version: 0.1.0.{build}
 environment:
   matrix:
-  - PYTHON: "C:\Python36-x64"
+  - PYTHON: "C:\\Python36-x64"
 init:
 - cmd: "ECHO %PYTHON%"
 - cmd: "ls %PYTHON%"
