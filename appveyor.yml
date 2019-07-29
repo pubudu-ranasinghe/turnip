@@ -1,6 +1,6 @@
 version: 0.1.0.{build}
 install:
-- ps: pip install fbs PyQt5 beets
+- ps: pip install fbs PyQt5==5.13.0 beets
 build_script:
 - ps: >-
     fbs freeze
