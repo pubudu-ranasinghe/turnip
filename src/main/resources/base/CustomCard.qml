@@ -21,7 +21,7 @@ Rectangle {
 
     Image {
         id: image
-        source: "../images/placeholder.png"
+        source: "images/placeholder.png"
         height: parent.height
         width: parent.height
     }

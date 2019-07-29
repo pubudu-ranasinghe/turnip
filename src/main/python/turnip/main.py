@@ -3,7 +3,7 @@ from fbs_runtime.application_context import ApplicationContext, cached_property
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 from PyQt5.QtCore import QUrl, QObject, Q_ENUM
 from beet import BeetsFacade
-from config import ConfigHandler
+from confighandler import ConfigHandler
 from library import LibraryHandler
 from importhandler import ImportHandler
 from importadapter import ImportAdapter
@@ -48,7 +48,7 @@ class AppContext(ApplicationContext):
         return ImportHandler(self.beets, self.adapter)
 
     def run(self):
-        url = QUrl.fromLocalFile(self.get_resource("ImporterSelection.qml"))
+        url = QUrl.fromLocalFile(self.get_resource("main.qml"))
         engine = QQmlApplicationEngine()
 
         qmlRegisterType(QActionType, "ActionType", 1, 0, "ActionType")

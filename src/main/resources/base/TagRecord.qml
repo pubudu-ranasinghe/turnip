@@ -8,12 +8,12 @@ Window {
 
     FontLoader {
         id: interBold
-        source: "../fonts/Inter-Bold.ttf"
+        source: "fonts/Inter-Bold.ttf"
     }
 
     FontLoader {
         id: interRegular
-        source: "../fonts/Inter-Regular.ttf"
+        source: "fonts/Inter-Regular.ttf"
     }
 
     property string color_primary: "#fcd307"
@@ -60,7 +60,7 @@ Window {
         x: 20; y: 154
         width: 580; height: 126
         backgroundColor: color_white_two
-        image: "../images/placeholder.png"
+        image: "images/placeholder.png"
         primaryText: "Living Things"
     }
 
@@ -70,7 +70,7 @@ Window {
         x: 20; y: 300
         width: 580; height: 50
         backgroundColor: color_white_two
-        image: "../images/placeholder.png"
+        image: "images/placeholder.png"
         primaryText: "Artist - Some Other Album (53.2 %)"
     }
 
@@ -80,7 +80,7 @@ Window {
         x: 20; y: 360
         width: 580; height: 50
         backgroundColor: color_white_two
-        image: "../images/placeholder.png"
+        image: "images/placeholder.png"
         primaryText: "Artist - Another Album (23.3 %)"
     }
 }

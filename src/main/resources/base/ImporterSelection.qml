@@ -9,12 +9,12 @@ Window {
 
     FontLoader {
         id: interBold
-        source: "../fonts/Inter-Bold.ttf"
+        source: "fonts/Inter-Bold.ttf"
     }
 
     FontLoader {
         id: interRegular
-        source: "../fonts/Inter-Regular.ttf"
+        source: "fonts/Inter-Regular.ttf"
     }
 
     property var importerWindow: Importer {}
@@ -152,7 +152,7 @@ Window {
         width: 173; height: 66
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
-        source: "../images/cat_peek.png"
+        source: "images/cat_peek.png"
         fillMode: Image.PreserveAspectFit
     }
 

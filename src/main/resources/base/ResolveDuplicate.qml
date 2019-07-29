@@ -10,12 +10,12 @@ Window {
 
     FontLoader {
         id: interBold
-        source: "../fonts/Inter-Bold.ttf"
+        source: "fonts/Inter-Bold.ttf"
     }
 
     FontLoader {
         id: interRegular
-        source: "../fonts/Inter-Regular.ttf"
+        source: "fonts/Inter-Regular.ttf"
     }
 
     property string color_primary: "#fcd307"
@@ -63,7 +63,7 @@ Window {
 
         x: 20; y: 107
         height: 90; width: 320
-        image: "../images/placeholder.png"
+        image: "images/placeholder.png"
         primaryText: oldItem.title
         secondaryText1: oldItem.artist
         secondaryText2: oldItem.year
@@ -85,7 +85,7 @@ Window {
 
         x: 20; y: 236
         height: 90; width: 320
-        image: "../images/placeholder.png"
+        image: "images/placeholder.png"
         primaryText: newItem.title
         secondaryText1: newItem.artist
         secondaryText2: newItem.year

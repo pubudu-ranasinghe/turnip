@@ -11,8 +11,8 @@ from models import Item, ImportEvent, UserAction, ActionType, EventType
 
 
 logger = logging.getLogger("turnip")
-logging.debug("")  # A hack to force log level
-logger.setLevel(logging.DEBUG)
+# logging.debug("")  # A hack to force log level
+# logger.setLevel(logging.DEBUG)
 
 
 class ImportHandler(QObject):

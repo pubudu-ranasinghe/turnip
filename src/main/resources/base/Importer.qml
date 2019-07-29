@@ -11,12 +11,12 @@ Window {
 
     FontLoader {
         id: interBold
-        source: "../fonts/Inter-Bold.ttf"
+        source: "fonts/Inter-Bold.ttf"
     }
 
     FontLoader {
         id: interRegular
-        source: "../fonts/Inter-Regular.ttf"
+        source: "fonts/Inter-Regular.ttf"
     }
 
     property string color_primary: "#fcd307"
@@ -76,7 +76,7 @@ Window {
             DetailButton {
                 width: 600; height: 50
                 primaryText: formatCandidateString(importer.currentItem.candidates[index])
-                image: "../images/placeholder.png"
+                image: "images/placeholder.png"
                 backgroundColor: color_white_two
                 onClicked: importer.sendAction(ActionType.SELECT_CANDIDATE, index)
             }

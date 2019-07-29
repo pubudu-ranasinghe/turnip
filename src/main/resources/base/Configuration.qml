@@ -8,12 +8,12 @@ Window {
 
     FontLoader {
         id: interBold
-        source: "../fonts/Inter-Bold.ttf"
+        source: "fonts/Inter-Bold.ttf"
     }
 
     FontLoader {
         id: interRegular
-        source: "../fonts/Inter-Regular.ttf"
+        source: "fonts/Inter-Regular.ttf"
     }
 
     property string color_primary: "#fcd307"
