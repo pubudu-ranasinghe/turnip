@@ -10,10 +10,11 @@ install:
 - cmd: "%PYTHON%\\python.exe --version"
 - cmd: "%PYTHON%\\Scripts\\pip.exe install fbs PyQt5 beets"
 build_script:
-- cmd: "fbs freeze --debug"
-- cmd: "fbs installer"
+- cmd: "fbs freeze"
+after_build:
+- cmd: "7z a Turnip.zip target\\Turnip"
 test: off
 artifacts:
-- path: target/TurnipSetup.exe
-  name: Installer
+- path: target/Turnip.zip
+  name: Executable
 deploy: off
