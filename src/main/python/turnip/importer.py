@@ -37,13 +37,13 @@ class TurnipImporter(ImportSession):
         event = ImportEvent(EventType.RESOLVE_DUPLICATE, [old, new])
         result = self._adapter.consume_event(event)
 
-        if result.action_type is ActionType.DUPLICATE_REPLACE_OLD:
+        if result.action_type is ActionType.REPLACE_OLD:
             task.should_remove_duplicates = True
-        elif result.action_type is ActionType.DUPLICATE_SKIP_NEW:
+        elif result.action_type is ActionType.SKIP_NEW:
             task.set_choice(action.SKIP)
-        elif result.action_type is ActionType.DUPLICATE_KEEP_BOTH:
+        elif result.action_type is ActionType.KEEP_BOTH:
             pass
-        elif result.action_type is ActionType.DUPLICATE_MERGE:
+        elif result.action_type is ActionType.MERGE:
             task.should_merge_duplicates = True
         else:
             print("Unkown Action Type")

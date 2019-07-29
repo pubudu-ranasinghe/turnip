@@ -99,7 +99,7 @@ Window {
         text: qsTr("Replace")
         backgroundColor: color_gray
         onClicked: {
-            resolveDuplicateWindow.selectAction(ActionType.DUPLICATE_REPLACE_OLD)
+            resolveDuplicateWindow.selectAction(ActionType.REPLACE_OLD)
             resolveDuplicateWindow.close()
         }
     }
@@ -112,7 +112,7 @@ Window {
         text: qsTr("Skip")
         backgroundColor: color_gray
         onClicked: {
-            resolveDuplicateWindow.selectAction(ActionType.DUPLICATE_SKIP_NEW)
+            resolveDuplicateWindow.selectAction(ActionType.SKIP_NEW)
             resolveDuplicateWindow.close()    
         }
     }
@@ -125,7 +125,7 @@ Window {
         text: qsTr("Keep Both")
         backgroundColor: color_gray
         onClicked: {
-            resolveDuplicateWindow.selectAction(ActionType.DUPLICATE_KEEP_BOTH)
+            resolveDuplicateWindow.selectAction(ActionType.KEEP_BOTH)
             resolveDuplicateWindow.close()
         }
     }
@@ -138,7 +138,7 @@ Window {
         text: qsTr("Merge")
         backgroundColor: color_gray
         onClicked: {
-            resolveDuplicateWindow.selectAction(ActionType.DUPLICATE_MERGE)
+            resolveDuplicateWindow.selectAction(ActionType.MERGE)
             resolveDuplicateWindow.close()
         }
     }

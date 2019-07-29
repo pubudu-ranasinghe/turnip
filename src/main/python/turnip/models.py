@@ -43,16 +43,20 @@ class EventType(Enum):
 
 
 class ActionType(Enum):
+    # Global actions
     UNKOWN = 0
-    RESUME_YES = 1
-    RESUME_NO = 2
-    SKIP = 3
-    SELECT_CANDIDATE = 4
-    ABORT = 5
-    DUPLICATE_REPLACE_OLD = 6
-    DUPLICATE_SKIP_NEW = 7
-    DUPLICATE_KEEP_BOTH = 8
-    DUPLICATE_MERGE = 9
+    ABORT = 1
+    # Resume actions
+    RESUME_YES = 10
+    RESUME_NO = 11
+    # Album match actions
+    SKIP = 20
+    SELECT_CANDIDATE = 21
+    # Duplicate item actions
+    REPLACE_OLD = 30
+    SKIP_NEW = 31
+    KEEP_BOTH = 32
+    MERGE = 33
 
 
 class ImportEvent(object):
