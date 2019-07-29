@@ -7,9 +7,10 @@ init:
 install:
 - cmd: "%PYTHON%\\python.exe --version"
 - cmd: "%PYTHON%\\Scripts\\pip.exe install fbs PyQt5 beets"
+- cmd: "set PATH=%PYTHON%\\Scripts;%PATH%"
 build_script:
-- cmd: "%PYTHON%\\Scripts\\fbs.exe freeze --debug"
-- cmd: "%PYTHON%\\Scripts\\fbs.exe installer"
+- cmd: "fbs freeze --debug"
+- cmd: "fbs installer"
 test: off
 artifacts:
 - path: target/TurnipSetup.exe
