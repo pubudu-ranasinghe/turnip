@@ -12,7 +12,7 @@ install:
 build_script:
 - cmd: "fbs freeze"
 after_build:
-- cmd: "7z a Turnip.zip target\\Turnip"
+- cmd: "7z a target\\Turnip.zip target\\Turnip"
 test: off
 artifacts:
 - path: target/Turnip.zip
