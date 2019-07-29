@@ -4,8 +4,8 @@ environment:
   - PYTHON: "C:\Python36-x64"
 install:
 - ps: >-
-    %PYTHON%\\python.exe --version
-    %PYTHON%/Scripts/pip.exe install fbs PyQt5==5.13.0 beets
+    "%PYTHON%\\python.exe --version"
+    "%PYTHON%\\Scripts\\pip.exe install fbs PyQt5 beets"
 build_script:
 - ps: >-
     fbs freeze
