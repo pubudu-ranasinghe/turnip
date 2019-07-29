@@ -1,5 +1,8 @@
 # 🥦 Turnip
 
+[![Build status](https://ci.appveyor.com/api/projects/status/05glwcx6bj0morjq?svg=true)](https://ci.appveyor.com/project/pubudu-ranasinghe/turnip)
+
+
 Turnip is a fancy GUI for [Beets](http://beets.io/) — A media library management system for obsessive-compulsive music geeks.
 
 ## Contribution
