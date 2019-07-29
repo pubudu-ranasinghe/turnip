@@ -3,10 +3,10 @@ environment:
   matrix:
   - PYTHON: "C:\Python36-x64"
 init:
-- "ECHO %PYTHON%"
+- cmd: "ECHO %PYTHON%"
 install:
-- "%PYTHON%\\python.exe --version"
-- "%PYTHON%\\Scripts\\pip.exe install fbs PyQt5 beets"
+- cmd: "%PYTHON%\\python.exe --version"
+- cmd: "%PYTHON%\\Scripts\\pip.exe install fbs PyQt5 beets"
 build_script:
 - ps: >-
     fbs freeze
