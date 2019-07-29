@@ -4,10 +4,11 @@ environment:
   - PYTHON: "C:\\Python36-x64"
 init:
 - cmd: "ECHO %PYTHON%"
+- cmd: "set PATH=%PYTHON%;%PATH%"
+- cmd: "set PATH=%PYTHON%\\Scripts;%PATH%"
 install:
 - cmd: "%PYTHON%\\python.exe --version"
 - cmd: "%PYTHON%\\Scripts\\pip.exe install fbs PyQt5 beets"
-- cmd: "set PATH=%PYTHON%\\Scripts;%PATH%"
 build_script:
 - cmd: "fbs freeze --debug"
 - cmd: "fbs installer"
