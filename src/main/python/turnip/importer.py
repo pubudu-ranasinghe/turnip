@@ -1,7 +1,14 @@
-from beets.importer import ImportSession, ImportTask, action, displayable_path
+from beets.importer import (
+    ImportSession,
+    ImportTask,
+    action,
+    displayable_path,
+    ImportAbort
+)
 from importadapter import ImportAdapter
 from util import build_candidate, model_to_cadidate
 from models import Item, ImportEvent, EventType, ActionType
+import logging
 
 
 class TurnipImporter(ImportSession):
@@ -27,6 +34,16 @@ class TurnipImporter(ImportSession):
             return action.SKIP
         elif result.action_type is ActionType.SELECT_CANDIDATE:
             return task.candidates[result.payload]
+        elif result.action_type is ActionType.USE_AS_IS:
+            return action.ASIS
+        elif result.action_type is ActionType.AS_TRACKS:
+            return action.TRACKS
+        # TODO Manual search
+        elif result.action_type is ActionType.SEARCH:
+            raise NotImplementedError
+        elif result.action_type is ActionType.ABORT:
+            logging.warn("User initiated abort")
+            raise ImportAbort()
         else:
             print("Unkown Action Type")
             raise NotImplementedError
@@ -45,6 +62,9 @@ class TurnipImporter(ImportSession):
             pass
         elif result.action_type is ActionType.MERGE:
             task.should_merge_duplicates = True
+        elif result.action_type is ActionType.ABORT:
+            logging.warn("User initiated abort")
+            raise ImportAbort()
         else:
             print("Unkown Action Type")
             raise NotImplementedError

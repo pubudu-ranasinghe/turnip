@@ -52,6 +52,9 @@ class ActionType(Enum):
     # Album match actions
     SKIP = 20
     SELECT_CANDIDATE = 21
+    USE_AS_IS = 22
+    AS_TRACKS = 23
+    SEARCH = 24
     # Duplicate item actions
     REPLACE_OLD = 30
     SKIP_NEW = 31

@@ -34,7 +34,7 @@ Window {
         return result
     }
 
-    width: 640
+    width: 720
     height: 580
     title: qsTr("Import Music")
 
@@ -93,8 +93,36 @@ Window {
     }
 
     CustomButton {
+        id: useAsIsButton
+        x: 155; y: 510
+        width: 120; height: 50
+        backgroundColor: color_gray
+        text: qsTr("Use as-is")
+        onClicked: importer.sendAction(ActionType.USE_AS_IS)
+    }
+
+    CustomButton {
+        id: asTracksButton
+        x: 290; y: 510
+        width: 120; height: 50
+        backgroundColor: color_gray
+        text: qsTr("As Tracks")
+        onClicked: importer.sendAction(ActionType.AS_TRACKS)
+    }
+
+    CustomButton {
+        id: searchButton
+        x: 425; y: 510
+        width: 120; height: 50
+        backgroundColor: color_gray
+        text: qsTr("Search")
+        enabled: false
+        onClicked: importer.sendAction(ActionType.SEARCH)
+    }
+
+    CustomButton {
         id: abortButton
-        x: 490; y: 510
+        x: 580; y: 510
         width: 120; height: 50
         backgroundColor: color_gray
         text: qsTr("Abort")
