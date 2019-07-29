@@ -3,7 +3,9 @@ environment:
   matrix:
   - PYTHON: "C:\Python36-x64"
 install:
-- ps: pip install fbs PyQt5==5.13.0 beets
+- ps: >-
+    python --version
+    pip install fbs PyQt5==5.13.0 beets
 build_script:
 - ps: >-
     fbs freeze
