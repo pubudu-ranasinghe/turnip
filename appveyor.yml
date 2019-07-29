@@ -1,13 +1,20 @@
 version: 0.1.0.{build}
+environment:
+  matrix:
+  - PYTHON: "C:\\Python36-x64"
+init:
+- cmd: "ECHO %PYTHON%"
+- cmd: "set PATH=%PYTHON%;%PATH%"
+- cmd: "set PATH=%PYTHON%\\Scripts;%PATH%"
 install:
-- ps: pip install fbs PyQt5 beets
+- cmd: "%PYTHON%\\python.exe --version"
+- cmd: "%PYTHON%\\Scripts\\pip.exe install fbs PyQt5 beets"
 build_script:
-- ps: >-
-    fbs freeze
-
-    fbs installer
+- cmd: "fbs freeze"
+after_build:
+- cmd: "7z a target\\Turnip.zip target\\Turnip"
 test: off
 artifacts:
-- path: target/TurnipSetup.exe
-  name: Installer
+- path: target/Turnip.zip
+  name: Executable
 deploy: off
