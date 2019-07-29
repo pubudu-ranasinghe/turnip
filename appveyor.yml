@@ -5,8 +5,8 @@ environment:
 init:
 - "ECHO %PYTHON%"
 install:
-- ps: "%PYTHON%\\python.exe --version"
-- ps: "%PYTHON%\\Scripts\\pip.exe install fbs PyQt5 beets"
+- "%PYTHON%\\python.exe --version"
+- "%PYTHON%\\Scripts\\pip.exe install fbs PyQt5 beets"
 build_script:
 - ps: >-
     fbs freeze
