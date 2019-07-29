@@ -4,15 +4,12 @@ environment:
   - PYTHON: "C:\\Python36-x64"
 init:
 - cmd: "ECHO %PYTHON%"
-- cmd: "ls %PYTHON%"
 install:
 - cmd: "%PYTHON%\\python.exe --version"
 - cmd: "%PYTHON%\\Scripts\\pip.exe install fbs PyQt5 beets"
 build_script:
-- ps: >-
-    fbs freeze
-
-    fbs installer
+- cmd: "%PYTHON%\\Scripts\\fbs.exe freeze"
+- cmd: "%PYTHON%\\Scripts\\fbs.exe installer"
 test: off
 artifacts:
 - path: target/TurnipSetup.exe
