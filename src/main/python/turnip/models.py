@@ -40,6 +40,7 @@ class EventType(Enum):
     TEST_EVENT = 1
     ASK_ALBUM = 2
     RESOLVE_DUPLICATE = 3
+    ASK_TRACK = 4
 
 
 class ActionType(Enum):
@@ -49,7 +50,7 @@ class ActionType(Enum):
     # Resume actions
     RESUME_YES = 10
     RESUME_NO = 11
-    # Album match actions
+    # Track/Album match actions
     SKIP = 20
     SELECT_CANDIDATE = 21
     USE_AS_IS = 22

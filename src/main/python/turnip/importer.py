@@ -12,6 +12,7 @@ import logging
 
 
 class TurnipImporter(ImportSession):
+
     def __init__(self, lib, loghandler, paths, query, adapter: ImportAdapter):
         super(TurnipImporter, self).__init__(lib, loghandler, paths, query)
         self._adapter = adapter
@@ -20,7 +21,28 @@ class TurnipImporter(ImportSession):
         raise NotImplementedError
 
     def choose_item(self, task):
-        raise NotImplementedError
+        item_path = displayable_path(task.paths, " / ")
+        item = Item(item_path)
+        item.candidates = list(map(build_candidate, task.candidates))
+
+        event = ImportEvent(EventType.ASK_TRACK, item)
+        result = self._adapter.consume_event(event)
+
+        if result.action_type is ActionType.SKIP:
+            return action.SKIP
+        elif result.action_type is ActionType.USE_AS_IS:
+            return action.ASIS
+        elif result.action_type is ActionType.SELECT_CANDIDATE:
+            return task.candidates[result.payload]
+            # TODO Manual search
+        elif result.action_type is ActionType.SEARCH:
+            raise NotImplementedError
+        elif result.action_type is ActionType.ABORT:
+            logging.warn("User initiated abort")
+            raise ImportAbort()
+        else:
+            print("Unkown Action Type")
+            raise NotImplementedError
 
     def choose_match(self, task: ImportTask):
         item_path = displayable_path(task.paths, " / ")

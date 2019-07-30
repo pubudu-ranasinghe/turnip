@@ -39,6 +39,8 @@ class ImportHandler(QObject):
             self.set_current_item(e.payload)
         elif e.event_type is EventType.RESOLVE_DUPLICATE:
             self.ask_resolve_duplicate(e.payload[0], e.payload[1])
+        elif e.event_type is EventType.ASK_TRACK:
+            self.set_current_item(e.payload)
         else:
             pass
 
