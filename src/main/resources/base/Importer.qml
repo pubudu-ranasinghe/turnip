@@ -159,7 +159,7 @@ Window {
         id: busyIndicator
         x: 290
         y: 210
-        running: importer.loadingStatus
+        running: importer.isBusy
     }
 }
 

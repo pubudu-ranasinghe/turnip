@@ -22,7 +22,7 @@ class ImportHandler(QObject):
     """
 
     _current_item: Item
-    _loading_status = False
+    _is_busy = False
 
     def __init__(self, beets: BeetsFacade, adapter: ImportAdapter):
         QObject.__init__(self)
@@ -35,6 +35,7 @@ class ImportHandler(QObject):
 
     def handle_event(self, e: ImportEvent):
         logger.debug(f"Received event {e.event_type}")
+        self.set_is_busy(False)
         if e.event_type is EventType.ASK_ALBUM:
             self.set_current_item(e.payload)
         elif e.event_type is EventType.RESOLVE_DUPLICATE:
@@ -60,20 +61,20 @@ class ImportHandler(QObject):
         notify=currentItemChanged
     )
 
-    loadingStatusChanged = pyqtSignal(bool)
+    isBusyChanged = pyqtSignal(bool)
 
-    def get_loading_status(self):
-        return self._loading_status
+    def get_is_busy(self):
+        return self._is_busy
 
-    def set_loading_status(self, status: bool):
-        self._loading_status = status
-        self.loadingStatusChanged.emit(status)
+    def set_is_busy(self, status: bool):
+        self._is_busy = status
+        self.isBusyChanged.emit(status)
 
-    loadingStatus = pyqtProperty(
+    isBusy = pyqtProperty(
         bool,
-        get_loading_status,
-        set_loading_status,
-        notify=loadingStatusChanged
+        get_is_busy,
+        set_is_busy,
+        notify=isBusyChanged
     )
 
     endSession = pyqtSignal()
@@ -95,6 +96,7 @@ class ImportHandler(QObject):
         self.handle_action(action, payload)
 
     def handle_action(self, action, payload):
+        self.set_is_busy(True)
         user_action = UserAction(ActionType(action), payload)
         user_action.payload = payload
         self.adapter.handle_action(user_action)
@@ -112,6 +114,7 @@ class ImportHandler(QObject):
         self._threadpool.start(worker)
 
     def start_session(self, path: str):
+        self.set_is_busy(True)
         logger.info(f"Starting import session with path: {path}")
         if config['import']['log'].get() is not None:
             logpath = config['import']['log'].as_filename()
@@ -135,6 +138,11 @@ class ImportHandler(QObject):
     def thread_complete(self):
         logger.info("Thread completed. Ending session")
         self.endSession.emit()
+        self.clean_up()
+
+    def clean_up(self):
+        self.set_current_item(Item(""))
+        self.set_is_busy(False)
 
 
 class Worker(QRunnable):

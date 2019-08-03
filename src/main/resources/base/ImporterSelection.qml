@@ -145,7 +145,7 @@ Window {
         selectFolder: true
         onAccepted: {
             var component = Qt.createComponent("Importer.qml");
-            var importerWindow = component.createObject(mainWindow);
+            var importerWindow = component.createObject(importerSelectionWindow);
             importerWindow.show();
             importer.startSession(importPathDialog.fileUrl)
         }
