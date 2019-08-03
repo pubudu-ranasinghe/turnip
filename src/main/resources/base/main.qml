@@ -15,16 +15,13 @@ Window {
         id: interRegular
         source: "fonts/Inter-Regular.ttf"
     }
-
-    property var configWindow: Configuration {}
-    property var libraryWindow: Library {}
-    property var importerSelectionWindow: ImporterSelection {}
-    
+  
     property string color_primary: "#fcd307"
     property string color_black: "#1b1919"
     property string color_gray: "#ececec"
     property string color_grayish: "#aeabab"
-    property string color_dark_gray: "#4e4747"  
+    property string color_dark_gray: "#4e4747"
+    property string color_white_two: "#fafafa"
 
     visible: true
     width: 360
@@ -105,7 +102,11 @@ Window {
         backgroundColor: color_primary
         textcolor: color_black
 
-        onClicked: importerSelectionWindow.visible = true
+        onClicked: {
+            var component = Qt.createComponent("ImporterSelection.qml");
+            var importerSelectionWindow = component.createObject(mainWindow);
+            importerSelectionWindow.show();
+        }
     }
 
     CustomButton {
@@ -117,7 +118,11 @@ Window {
         backgroundColor: color_gray
         textcolor: color_black
 
-        onClicked: libraryWindow.visible = true
+        onClicked: {
+            var component = Qt.createComponent("Library.qml");
+            var libraryWindow = component.createObject(mainWindow);
+            libraryWindow.show();
+        }
     }
 
     CustomButton {
@@ -129,7 +134,11 @@ Window {
         backgroundColor: color_gray
         textcolor: color_black
 
-        onClicked: configWindow.visible = true
+        onClicked: {
+            var component = Qt.createComponent("Configuration.qml");
+            var configurationWindow = component.createObject(mainWindow);
+            configurationWindow.show();
+        }
     }
 
 }

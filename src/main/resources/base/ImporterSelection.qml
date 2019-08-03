@@ -7,27 +7,10 @@ Window {
     id: importerSelectionWindow
     visible: true
 
-    FontLoader {
-        id: interBold
-        source: "fonts/Inter-Bold.ttf"
-    }
-
-    FontLoader {
-        id: interRegular
-        source: "fonts/Inter-Regular.ttf"
-    }
-
-    property var importerWindow: Importer {}
-
-    property string color_primary: "#fcd307"
-    property string color_black: "#1b1919"
-    property string color_gray: "#ececec"
-    property string color_grayish: "#aeabab"
-    property string color_dark_gray: "#4e4747"
-
     width: 360
     height: 480
     title: qsTr("Select Import Mode")
+    modality: Qt.ApplicationModal
 
     Text {
         id: headerText
@@ -161,7 +144,9 @@ Window {
         title: qsTr("Select Import Folder")
         selectFolder: true
         onAccepted: {
-            importerWindow.visible = true
+            var component = Qt.createComponent("Importer.qml");
+            var importerWindow = component.createObject(mainWindow);
+            importerWindow.show();
             importer.startSession(importPathDialog.fileUrl)
         }
     }
