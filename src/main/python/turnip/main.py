@@ -1,5 +1,5 @@
 import sys
-from fbs_runtime.application_context import ApplicationContext, cached_property
+from fbs_runtime.application_context.PyQt5 import ApplicationContext, cached_property
 from PyQt5.QtQml import QQmlApplicationEngine, qmlRegisterType
 from PyQt5.QtCore import QUrl, QObject, Q_ENUM
 from beet import BeetsFacade
