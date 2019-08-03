@@ -25,6 +25,7 @@ class Candidate(object):
 
 class Item(object):
     candidates: List[Candidate] = []
+    is_album = True
 
     def __init__(self, path: str):
         self.path = path
@@ -32,7 +33,8 @@ class Item(object):
     def to_dict(self):
         return {
             "path": self.path,
-            "candidates": list(map(lambda c: c.to_dict(), self.candidates))
+            "candidates": list(map(lambda c: c.to_dict(), self.candidates)),
+            "isAlbum": self.is_album
         }
 
 

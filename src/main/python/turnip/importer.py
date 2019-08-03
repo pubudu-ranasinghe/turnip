@@ -20,9 +20,11 @@ class TurnipImporter(ImportSession):
     def should_resume(self, path) -> bool:
         raise NotImplementedError
 
+    # Tagging track
     def choose_item(self, task):
         item_path = displayable_path(task.paths, " / ")
         item = Item(item_path)
+        item.is_album = False
         item.candidates = list(map(build_candidate, task.candidates))
 
         event = ImportEvent(EventType.ASK_TRACK, item)
@@ -44,9 +46,11 @@ class TurnipImporter(ImportSession):
             print("Unkown Action Type")
             raise NotImplementedError
 
+    # Tagging album
     def choose_match(self, task: ImportTask):
         item_path = displayable_path(task.paths, " / ")
         item = Item(item_path)
+        item.is_album = True
         item.candidates = list(map(build_candidate, task.candidates))
 
         event = ImportEvent(EventType.ASK_ALBUM, item)

@@ -25,7 +25,7 @@ Window {
     Text {
         id: headerText
 
-        text: importer.loadingStatus ? qsTr("Loading") : qsTr("Tagging")
+        text: importer.currentItem.isAlbum ? qsTr("Tagging Album") : qsTr("Tagging Track")
         x: 20; y: 36
         font {
             pixelSize: 28
@@ -91,6 +91,7 @@ Window {
         width: 120; height: 50
         backgroundColor: color_gray
         text: qsTr("As Tracks")
+        enabled: importer.currentItem.isAlbum
         onClicked: importer.sendAction(ActionType.AS_TRACKS)
     }
 
