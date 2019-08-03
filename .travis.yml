@@ -1,0 +1,11 @@
+language: python
+python:
+  - "3.6"
+# command to install dependencies
+install:
+  - pip install fbs PyQt5 beets
+# command to run tests
+script:
+  - fbs freeze
+  - zip -r target/Turnip.zip target/Turnip
+  - ls -lh target
