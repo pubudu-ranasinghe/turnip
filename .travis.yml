@@ -7,5 +7,5 @@ install:
 # command to run tests
 script:
   - fbs freeze
-  - zip -r target\\Turnip.zip target\\Turnip
-  - ls -lh .\target
+  - zip -r target/Turnip.zip target/Turnip
+  - ls -lh target
