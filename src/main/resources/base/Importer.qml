@@ -12,12 +12,14 @@ Window {
     function formatCandidateString(candidate) {
         let result = ""
         if (candidate) {
-            result = `(${Math.floor(candidate.distance * 100)} %) ${candidate.title} - ${candidate.artist}`;
+          result = `(${Math.floor(candidate.distance * 100)} %) ${candidate.title} - ${candidate.artist}`;
         }
         return result
     }
 
-    width: 720
+    property int candidateHoverIndex: 0
+
+    width: 970
     height: 580
     title: qsTr("Import Music")
     modality: Qt.ApplicationModal
@@ -63,6 +65,11 @@ Window {
                 image: "images/placeholder.png"
                 backgroundColor: color_white_two
                 onClicked: importer.sendAction(ActionType.SELECT_CANDIDATE, index)
+                onHoveredChanged: {
+                    if (hovered) {
+                        candidateHoverIndex = index
+                    }
+                }
             }
         }
     }
@@ -112,6 +119,12 @@ Window {
         backgroundColor: color_gray
         text: qsTr("Abort")
         onClicked: importer.sendAction(ActionType.ABORT)
+    }
+
+    ItemCard {
+        id: itemCard
+        x: 720
+        itemData: importer.currentItem.candidates[candidateHoverIndex]
     }
 
     Dialog {
