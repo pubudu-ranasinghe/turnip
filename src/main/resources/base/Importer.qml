@@ -138,13 +138,15 @@ Window {
 
         Text {
             id: resumeDialogText
-            text: qsTr("We found a previous import session. Do you want to continue from where you left off?")
+            width: parent.width
+            text: "Text"
+            wrapMode: Text.WordWrap
         }
     }
 
     // TODO Refactor this signal
     signal reEndSession()
-    signal reResumePreviousImport()
+    signal reResumePreviousImport(string resumePath)
     signal reResolveDuplicate(var oldItem, var newItem)
     signal duplicateSelectAction(var action)
 
@@ -157,7 +159,10 @@ Window {
     Connections {
         target: importerWindow
         onReEndSession: importerWindow.close()
-        onReResumePreviousImport: resumeDialog.open()
+        onReResumePreviousImport: {
+            resumeDialogText.text = "We found a previous import session at  " + resumePath + ". Do you want to continue from where you left off?"
+            resumeDialog.open()
+        }
         onReResolveDuplicate: {
             var component = Qt.createComponent("ResolveDuplicate.qml");
             var resolveDialog = component.createObject(importerWindow);

@@ -2,7 +2,8 @@ from beets.importer import (
     ImportSession,
     ImportTask,
     action,
-    ImportAbort
+    ImportAbort,
+    displayable_path
 )
 from importadapter import ImportAdapter
 from util import build_candidate, model_to_cadidate, format_paths
@@ -17,7 +18,15 @@ class TurnipImporter(ImportSession):
         self._adapter = adapter
 
     def should_resume(self, path) -> bool:
-        raise NotImplementedError
+        event = ImportEvent(EventType.ASK_RESUME, displayable_path(path))
+        result = self._adapter.consume_event(event)
+
+        if result.action_type is ActionType.RESUME_YES:
+            return True
+        elif result.action_type is ActionType.RESUME_NO:
+            return False
+        else:
+            raise NotImplementedError
 
     # Tagging track
     def choose_item(self, task: ImportTask):

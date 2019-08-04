@@ -42,6 +42,8 @@ class ImportHandler(QObject):
             self.ask_resolve_duplicate(e.payload[0], e.payload[1])
         elif e.event_type is EventType.ASK_TRACK:
             self.set_current_item(e.payload)
+        elif e.event_type is EventType.ASK_RESUME:
+            self.ask_resume(e.payload)
         else:
             pass
 
@@ -79,13 +81,13 @@ class ImportHandler(QObject):
 
     endSession = pyqtSignal()
 
-    resumePreviousImport = pyqtSignal()
+    resumePreviousImport = pyqtSignal(str, arguments=["resumePath"])
 
     resolveDuplicate = pyqtSignal(
         "QVariantMap", "QVariantMap", arguments=["oldItem", "newItem"])
 
-    def ask_resume(self):
-        self.resumePreviousImport.emit()
+    def ask_resume(self, path):
+        self.resumePreviousImport.emit(path)
 
     def ask_resolve_duplicate(self, old, new):
         self.resolveDuplicate.emit(old.to_dict(), new.to_dict())
