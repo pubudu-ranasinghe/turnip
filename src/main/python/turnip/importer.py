@@ -2,11 +2,10 @@ from beets.importer import (
     ImportSession,
     ImportTask,
     action,
-    displayable_path,
     ImportAbort
 )
 from importadapter import ImportAdapter
-from util import build_candidate, model_to_cadidate
+from util import build_candidate, model_to_cadidate, format_paths
 from models import Item, ImportEvent, EventType, ActionType
 import logging
 
@@ -21,8 +20,8 @@ class TurnipImporter(ImportSession):
         raise NotImplementedError
 
     # Tagging track
-    def choose_item(self, task):
-        item_path = displayable_path(task.paths, " / ")
+    def choose_item(self, task: ImportTask):
+        item_path = format_paths(task.paths, task.toppath, "\n")
         item = Item(item_path)
         item.is_album = False
         item.candidates = list(map(build_candidate, task.candidates))
@@ -48,7 +47,7 @@ class TurnipImporter(ImportSession):
 
     # Tagging album
     def choose_match(self, task: ImportTask):
-        item_path = displayable_path(task.paths, " / ")
+        item_path = format_paths(task.paths, task.toppath, "\n")
         item = Item(item_path)
         item.is_album = True
         item.candidates = list(map(build_candidate, task.candidates))

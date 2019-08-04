@@ -1,5 +1,6 @@
 from beets.autotag import AlbumMatch, TrackMatch
 from beets.library import Item, Album
+from beets.util import _fsencoding
 from models import Candidate
 
 
@@ -51,3 +52,28 @@ def model_to_cadidate(model):
             artist=model.info.artist,
             year=None
         )
+
+
+def format_paths(path, toppath, separator="; "):
+    """Attempts to decode a bytestring path to a unicode object for the
+    purpose of displaying it to the user. If the `path` argument is a
+    list or a tuple, the elements are joined with `separator`.
+    """
+    top_path = toppath.decode(_fsencoding(), 'ignore')
+
+    if isinstance(path, (list, tuple)):
+        return separator.join(format_paths(p, toppath) for p in path)
+    elif isinstance(path, str):
+        short_path = path.replace(top_path, '') if top_path in path else path
+        return short_path
+
+    try:
+        decoded_path = path.decode(_fsencoding(), 'ignore')
+        short_path = decoded_path.replace(
+            top_path, '') if top_path in decoded_path else decoded_path
+        return short_path
+    except (UnicodeError, LookupError):
+        decoded_path = path.decode('utf-8', 'ignore')
+        short_path = decoded_path.replace(
+            top_path, '') if top_path in decoded_path else decoded_path
+        return short_path
