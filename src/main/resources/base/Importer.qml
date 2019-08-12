@@ -174,11 +174,9 @@ Window {
 
     }
 
-    BusyIndicator {
+    LoaderView {
         id: busyIndicator
-        x: 290
-        y: 210
-        running: importer.isBusy
+        visible: importer.isBusy
     }
 }
 
