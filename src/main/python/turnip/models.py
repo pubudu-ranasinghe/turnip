@@ -3,23 +3,31 @@ from enum import Enum
 
 
 class Candidate(object):
-    distance: float
-    title: str
-    artist: str
-    year: int
 
-    def __init__(self, distance=None, title=None, artist=None, year=None):
+    def __init__(self, distance=None, title=None, artist=None, year=None,
+                 albumtype=None, label=None, country=None, media=None,
+                 isAlbum=None):
         self.distance = distance
         self.title = title
         self.artist = artist
         self.year = year
+        self.albumtype = albumtype
+        self.label = label
+        self.country = country
+        self.media = media
+        self.isAlbum = isAlbum
 
     def to_dict(self):
         return {
             "distance": self.distance,
             "title": self.title,
             "artist": self.artist,
-            "year": self.year
+            "year": self.year,
+            "isAlbum": self.isAlbum,
+            "albumtype": self.albumtype,
+            "label": self.label,
+            "country": self.country,
+            "media": self.media
         }
 
 
@@ -43,6 +51,7 @@ class EventType(Enum):
     ASK_ALBUM = 2
     RESOLVE_DUPLICATE = 3
     ASK_TRACK = 4
+    ASK_RESUME = 5
 
 
 class ActionType(Enum):

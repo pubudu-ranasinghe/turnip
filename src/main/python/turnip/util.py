@@ -10,14 +10,20 @@ def build_candidate(c):
             title=c.info.album,
             artist=c.info.artist,
             year=c.info.year,
-            distance=c.distance.distance
+            distance=c.distance.distance,
+            isAlbum=True,
+            albumtype=c.info.albumtype,
+            label=c.info.label,
+            country=c.info.country,
+            media=c.info.media
         )
     elif isinstance(c, TrackMatch):
         return Candidate(
             title=c.info.title,
             artist=c.info.artist,
             year=None,
-            distance=c.distance.distance
+            distance=c.distance.distance,
+            isAlbum=False
         )
     else:
         return None
