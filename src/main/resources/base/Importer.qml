@@ -12,7 +12,7 @@ Window {
     function formatCandidateString(candidate) {
         let result = ""
         if (candidate) {
-          result = `(${Math.floor(candidate.distance * 100)} %) ${candidate.title} - ${candidate.artist}`;
+         result = `(${candidate.percentage} %) ${candidate.title} - ${candidate.artist}`;
         }
         return result
     }
@@ -52,22 +52,38 @@ Window {
     }
 
     Column {
-        x: 20; y: 154
-        width: 600
+        x: 20; y: 125
+        width: 680
         spacing: 10
+
+        DetailButtonAlt {
+            id: bestMatchCandidate
+            width: 680; height: 110
+            primaryText: `${importer.currentItem.candidates[0].title} (${importer.currentItem.candidates[0].percentage} %)`
+            secondaryText1: importer.currentItem.candidates[0].artist
+            secondaryText2: importer.currentItem.candidates[0].year
+            image: "images/placeholder.png"
+            backgroundColor: color_white_two
+            onClicked: importer.sendAction(ActionType.SELECT_CANDIDATE, 0)
+            onHoveredChanged: {
+                if (hovered) {
+                    candidateHoverIndex = 0
+                }
+            }
+        }
 
         Repeater {
             model: 4
 
             DetailButton {
-                width: 600; height: 50
-                primaryText: formatCandidateString(importer.currentItem.candidates[index])
+                width: 680; height: 50
+                primaryText: formatCandidateString(importer.currentItem.candidates[index+1])
                 image: "images/placeholder.png"
                 backgroundColor: color_white_two
-                onClicked: importer.sendAction(ActionType.SELECT_CANDIDATE, index)
+                onClicked: importer.sendAction(ActionType.SELECT_CANDIDATE, index+1)
                 onHoveredChanged: {
                     if (hovered) {
-                        candidateHoverIndex = index
+                        candidateHoverIndex = index+1
                     }
                 }
             }
