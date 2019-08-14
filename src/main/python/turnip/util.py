@@ -10,7 +10,7 @@ def build_candidate(c):
             title=c.info.album,
             artist=c.info.artist,
             year=c.info.year,
-            distance=c.distance.distance,
+            percentage=int((1 - c.distance) * 100),
             isAlbum=True,
             albumtype=c.info.albumtype,
             label=c.info.label,
@@ -22,7 +22,7 @@ def build_candidate(c):
             title=c.info.title,
             artist=c.info.artist,
             year=None,
-            distance=c.distance.distance,
+            percentage=int((1 - c.distance) * 100),
             isAlbum=False
         )
     else:

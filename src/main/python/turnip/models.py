@@ -4,10 +4,10 @@ from enum import Enum
 
 class Candidate(object):
 
-    def __init__(self, distance=None, title=None, artist=None, year=None,
+    def __init__(self, percentage=None, title=None, artist=None, year=None,
                  albumtype=None, label=None, country=None, media=None,
                  isAlbum=None):
-        self.distance = distance
+        self.percentage = percentage
         self.title = title
         self.artist = artist
         self.year = year
@@ -19,7 +19,7 @@ class Candidate(object):
 
     def to_dict(self):
         return {
-            "distance": self.distance,
+            "percentage": self.percentage,
             "title": self.title,
             "artist": self.artist,
             "year": self.year,
