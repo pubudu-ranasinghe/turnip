@@ -1,10 +1,12 @@
-# 🥦 Turnip
+<div align="center">
+    <img src="design/Turnip.png" />
+    <p>
+        Turnip is a fancy GUI for <a href="http://beets.io/">Beets</a> — A media library management system for obsessive-compulsive music geeks.
+    </p>
+    <img src="https://travis-ci.org/pubudu-ranasinghe/turnip.svg?branch=master">
+    <img src="https://ci.appveyor.com/api/projects/status/05glwcx6bj0morjq?svg=true">
+</div>
 
-[![Build status](https://ci.appveyor.com/api/projects/status/05glwcx6bj0morjq?svg=true)](https://ci.appveyor.com/project/pubudu-ranasinghe/turnip)
-[![Build Status](https://travis-ci.org/pubudu-ranasinghe/turnip.svg?branch=master)](https://travis-ci.org/pubudu-ranasinghe/turnip)
-
-
-Turnip is a fancy GUI for [Beets](http://beets.io/) — A media library management system for obsessive-compulsive music geeks.
 
 ## Contribution
 
