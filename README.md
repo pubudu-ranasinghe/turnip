@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="design/Turnip.png" />
+    <img src="design/Turnip.svg" />
     <p>
         Turnip is a fancy GUI for <a href="http://beets.io/">Beets</a> — A media library management system for obsessive-compulsive music geeks.
     </p>
