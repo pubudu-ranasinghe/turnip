@@ -12,7 +12,7 @@ Window {
     function formatCandidateString(candidate) {
         let result = ""
         if (candidate) {
-         result = `(${candidate.percentage} %) ${candidate.title} - ${candidate.artist}`;
+            result = `(${candidate.percentage} %) ${candidate.title} - ${candidate.artist}`;
         }
         return result
     }
@@ -188,6 +188,34 @@ Window {
             resolveDialog.show()
         }
 
+    }
+
+    Rectangle {
+        id: noMatchPlacheholder
+        visible: importer.currentItem.noMatch
+        x: 20; y: 125
+        width: 680; height: 350
+        color: color_gray
+        radius: 5
+
+        Image {
+            id: noMatchImage
+            y: 24
+            anchors.horizontalCenter: parent.horizontalCenter
+            source: "images/no_match.png"
+        }
+
+        Text {
+            y: 268
+            text: qsTr("No matches found")
+            anchors.horizontalCenter: parent.horizontalCenter
+            renderType: Text.NativeRendering
+            font {
+                pixelSize: 18
+                family: "Inter"
+                weight: Font.Normal
+            }
+        }
     }
 
     LoaderView {

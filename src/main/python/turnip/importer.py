@@ -34,6 +34,7 @@ class TurnipImporter(ImportSession):
         item = Item(item_path)
         item.is_album = False
         item.candidates = list(map(build_candidate, task.candidates))
+        item.no_match = len(item.candidates) == 0
 
         event = ImportEvent(EventType.ASK_TRACK, item)
         result = self._adapter.consume_event(event)
@@ -60,6 +61,7 @@ class TurnipImporter(ImportSession):
         item = Item(item_path)
         item.is_album = True
         item.candidates = list(map(build_candidate, task.candidates))
+        item.no_match = len(item.candidates) == 0
 
         event = ImportEvent(EventType.ASK_ALBUM, item)
         result = self._adapter.consume_event(event)

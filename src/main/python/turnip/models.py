@@ -34,6 +34,7 @@ class Candidate(object):
 class Item(object):
     candidates: List[Candidate] = []
     is_album = True
+    no_match = False
 
     def __init__(self, path: str):
         self.path = path
@@ -42,7 +43,8 @@ class Item(object):
         return {
             "path": self.path,
             "candidates": list(map(lambda c: c.to_dict(), self.candidates)),
-            "isAlbum": self.is_album
+            "isAlbum": self.is_album,
+            "noMatch": self.no_match
         }
 
 
