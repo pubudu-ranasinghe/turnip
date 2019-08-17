@@ -12,6 +12,7 @@ import logging
 
 
 class TurnipImporter(ImportSession):
+    track_count = 0
 
     def __init__(self, lib, loghandler, paths, query, adapter: ImportAdapter):
         super(TurnipImporter, self).__init__(lib, loghandler, paths, query)
@@ -42,8 +43,10 @@ class TurnipImporter(ImportSession):
         if result.action_type is ActionType.SKIP:
             return action.SKIP
         elif result.action_type is ActionType.USE_AS_IS:
+            self.track_count += 1
             return action.ASIS
         elif result.action_type is ActionType.SELECT_CANDIDATE:
+            self.track_count += 1
             return task.candidates[result.payload]
             # TODO Manual search
         elif result.action_type is ActionType.SEARCH:
@@ -69,8 +72,10 @@ class TurnipImporter(ImportSession):
         if result.action_type is ActionType.SKIP:
             return action.SKIP
         elif result.action_type is ActionType.SELECT_CANDIDATE:
+            self.track_count += len(task.items)
             return task.candidates[result.payload]
         elif result.action_type is ActionType.USE_AS_IS:
+            self.track_count += len(task.items)
             return action.ASIS
         elif result.action_type is ActionType.AS_TRACKS:
             return action.TRACKS

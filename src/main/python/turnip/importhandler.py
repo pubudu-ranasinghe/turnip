@@ -79,7 +79,7 @@ class ImportHandler(QObject):
         notify=isBusyChanged
     )
 
-    endSession = pyqtSignal()
+    endSession = pyqtSignal(int)
 
     resumePreviousImport = pyqtSignal(str, arguments=["resumePath"])
 
@@ -113,6 +113,7 @@ class ImportHandler(QObject):
             pathstr
         )
         worker.signals.finished.connect(self.thread_complete)
+        worker.signals.result.connect(self.session_result)
         self._threadpool.start(worker)
 
     def start_session(self, path: str):
@@ -136,10 +137,14 @@ class ImportHandler(QObject):
             self.adapter
         )
         session.start()
+        return session.track_count
+
+    def session_result(self, track_count: int):
+        self.endSession.emit(track_count)
+        logger.info(f"Session complete. Imported {track_count} tracks")
 
     def thread_complete(self):
-        logger.info("Thread completed. Ending session")
-        self.endSession.emit()
+        logger.info("Thread completed.")
         self.clean_up()
 
     def clean_up(self):

@@ -161,7 +161,7 @@ Window {
     }
 
     // TODO Refactor this signal
-    signal reEndSession()
+    signal reEndSession(int track_count)
     signal reResumePreviousImport(string resumePath)
     signal reResolveDuplicate(var oldItem, var newItem)
     signal duplicateSelectAction(var action)
@@ -174,7 +174,12 @@ Window {
 
     Connections {
         target: importerWindow
-        onReEndSession: importerWindow.close()
+        onReEndSession: {
+            var component = Qt.createComponent("SessionEnd.qml");
+            var sessionEnd = component.createObject(mainWindow, { track_count: track_count });
+            importerWindow.close()
+            sessionEnd.show()
+        }
         onReResumePreviousImport: {
             resumeDialogText.text = "We found a previous import session at  " + resumePath + ". Do you want to continue from where you left off?"
             resumeDialog.open()
